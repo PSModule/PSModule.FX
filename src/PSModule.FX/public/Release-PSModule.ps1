@@ -1,4 +1,6 @@
-﻿function Release-PSModule {
+﻿#Requires -Version platyPS
+
+function Release-PSModule {
     [CmdletBinding()]
     param()
 

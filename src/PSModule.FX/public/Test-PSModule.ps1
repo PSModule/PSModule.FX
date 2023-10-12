@@ -1,4 +1,7 @@
-﻿function Test-PSModule {
+﻿#Requires -Modules Pester
+#Requires -Modules PSScriptAnalyzer
+
+function Test-PSModule {
     [CmdletBinding()]
     param()
 
