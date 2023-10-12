@@ -8,60 +8,6 @@ $task = New-Object System.Collections.Generic.List[string]
 $task.Add('Build-Module')
 Write-Output "::group::[$($task -join '] - [')] - Starting..."
 
-#region Helpers
-function Resolve-ModuleDependencies {
-    <#
-    .SYNOPSIS
-    Resolve dependencies for a module based on the manifest file.
-
-    .DESCRIPTION
-    Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
-
-    .PARAMETER Path
-    The path to the manifest file.
-
-    .EXAMPLE
-    Resolve-ModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
-
-    Installs all modules defined in the manifest file, following PSModuleInfo structure.
-
-    .NOTES
-    Should later be adapted to support both pre-reqs, and dependencies.
-    Should later be adapted to take 4 parameters sets: specific version ("requiredVersion" | "GUID"), latest version ModuleVersion, and latest version within a range MinimumVersion - MaximumVersion.
-    #>
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string] $Path
-    )
-    $action = $MyInvocation.MyCommand.Name
-
-    $manifest = Import-PowerShellDataFile -Path $Path
-    Write-Verbose "[$action] - Reading file [$Path]"
-    Write-Verbose "[$action] - Found [$($manifest.RequiredModules.Count)] modules to install"
-
-    foreach ($requiredModule in $manifest.RequiredModules) {
-        $installParams = @{}
-
-        if ($requiredModule -is [string]) {
-            $installParams.Name = $requiredModule
-        } else {
-            $installParams.Name = $requiredModule.ModuleName
-            $installParams.MinimumVersion = $requiredModule.ModuleVersion
-            $installParams.RequiredVersion = $requiredModule.RequiredVersion
-            $installParams.MaximumVersion = $requiredModule.MaximumVersion
-        }
-        $installParams.Verbose = $false
-        $installParams.Force = $true
-
-        Write-Verbose "[$action] - [$($installParams.Name)] - Installing module"
-        Install-Module @installParams
-        Write-Verbose "[$action] - [$($installParams.Name)] - Done"
-    }
-    Write-Verbose "[$action] - Done"
-}
-#endregion Helpers
-
 #region Install-Prerequisites
 $task.Add('Install-Prerequisites')
 Write-Output "::group::[$($task -join '] - [')]"
