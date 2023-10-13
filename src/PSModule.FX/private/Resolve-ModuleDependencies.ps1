@@ -6,9 +6,6 @@
     .DESCRIPTION
     Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
 
-    .PARAMETER Path
-    The path to the manifest file.
-
     .EXAMPLE
     Resolve-ModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
 
@@ -20,6 +17,7 @@
     #>
     [CmdletBinding()]
     param(
+        # The path to the manifest file.
         [Parameter(Mandatory)]
         [string] $Path
     )
