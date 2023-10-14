@@ -1,10 +1,9 @@
-﻿#Requires -Modules Pester
-#Requires -Modules PSScriptAnalyzer
+﻿#Requires -Modules Pester, PSScriptAnalyzer
 
 function Test-PSModule {
     [CmdletBinding(SupportsShouldProcess)]
     param()
-    
+
     $task = New-Object System.Collections.Generic.List[string]
     #region Test-Module
     $task.Add('Test-Module')
