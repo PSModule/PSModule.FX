@@ -11,53 +11,28 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build manifest file"
+    Write-Output "::group::[$moduleName] - Finding manifest file"
 
-    Write-Verbose "[$($task -join '] - [')] - Finding manifest file"
     $manifestFileName = "$moduleName.psd1"
     $manifestFilePath = Join-Path -Path $SourceFolderPath $manifestFileName
-
-    Write-Verbose "[$($task -join '] - [')] - Creating new manifest file in outputs folder"
-    $outputManifestPath = (Join-Path -Path $moduleOutputFolder $manifestFileName)
-
-
-    $manifestFile = Get-Item -Path $manifestFilePath -ErrorAction SilentlyContinue
-    $manifestFileExists = $manifestFile.count -gt 0
-    if (-not $manifestFileExists) {
-        Write-Error "[$($task -join '] - [')] - [$manifestFileName] - 🟥 No manifest file found"
-        continue
-    }
-    Write-Verbose "[$($task -join '] - [')] - [$manifestFileName] - 🟩 Found manifest file"
-    Write-Verbose "[$($task -join '] - [')] - [$manifestFileName] - Processing"
-    $manifest = Import-PowerShellDataFile $manifestFilePath
-
-    $task.Add('Manifest')
-    Write-Output "::group::[$($task -join '] - [')]"
-    Write-Output "::group::[$($task -join '] - [')] - Processing manifest file"
-    $moduleFileName = "$moduleName.psm1"
-    $moduleFilePath = Join-Path -Path $SourceFolderPath $moduleFileName
-    $moduleFile = Get-Item -Path $moduleFilePath -ErrorAction SilentlyContinue
-    if ($moduleFile) {
-        $manifest.RootModule = [string]::IsNullOrEmpty($manifest.RootModule) ? $moduleFileName : $manifest.RootModule
-    } else {
-        $manifest.RootModule = $null
-    }
-    Write-Verbose "[$($task -join '] - [')] - [RootModule] - [$($manifest.RootModule)]"
-
-    $moduleType = switch -Regex ($manifest.RootModule) {
-        '\.(ps1|psm1)$' { 'Script' }
-        '\.dll$' { 'Binary' }
-        '\.cdxml$' { 'CIM' }
-        '\.xaml$' { 'Workflow' }
-        default { 'Manifest' }
-    }
-    Write-Verbose "[$($task -join '] - [')] - [ModuleType] - [$moduleType]"
-
-    $supportedModuleTypes = @('Script', 'Manifest')
-    if ($moduleType -notin $supportedModuleTypes) {
-        Write-Error "[$($task -join '] - [')] - [ModuleType] - [$moduleType] - Module type not supported"
+    if (-not (Test-Path -Path $manifestFilePath)) {
+        Write-Error "[$manifestFileName] - 🟥 No manifest file found"
         return 1
     }
+    Write-Verbose "[$manifestFileName] - 🟩 Found manifest file"
+    Write-Output '::endgroup::'
+
+    Write-Output "::group::[$moduleName] - Create output manifest file"
+    Write-Verbose 'Creating new manifest file in outputs folder'
+    $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
+    Write-Verbose "OutputManifestPath - [$outputManifestPath]"
+    New-ModuleManifest -Path $outputManifestPath
+
+    Write-Output "::group::[$moduleName] - Processing manifest file"
+    $manifest = Import-PowerShellDataFile $manifestFilePath
+
+    Set-PSModuleManifestRootModule -ManifestPath $outputManifestPath -SourceFolderPath $SourceFolderPath -RootModule $manifest.RootModule
+
 
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$($task -join '] - [')] - [Author] - [$($manifest.Author)]"
@@ -351,7 +326,7 @@
         https://learn.microsoft.com/en-us/powershell/gallery/concepts/package-manifest-affecting-ui?view=powershellget-2.x#tag-details
     #>
 
-    New-ModuleManifest -Path $outputManifestPath @manifest
+
 
     Write-Output "::group::[$moduleName] - Output - Manifest"
     Get-Content -Path $outputManifestPath

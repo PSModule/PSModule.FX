@@ -31,12 +31,12 @@ function Build-PSModule {
 
     $functionName = $PSCmdlet.MyInvocation.MyCommand.Name
 
-    Write-Output "::group::[$functionName] - Starting..."
+    Write-Output "::group::Starting..."
 
     $moduleFolders = Get-PSModuleFolders -Path $Path
-    Write-Verbose "[$functionName] - Found $($moduleFolders.Count) module(s)"
+    Write-Verbose "Found $($moduleFolders.Count) module(s)"
     $moduleFolders | ForEach-Object {
-        Write-Verbose "[$functionName] - [$($_.Name)]"
+        Write-Verbose "[$($_.Name)]"
     }
 
     foreach ($moduleFolder in $moduleFolders) {
