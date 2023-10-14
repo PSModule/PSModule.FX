@@ -34,10 +34,10 @@
     Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
     $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
-    Build-PSModuleBase -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
-    Build-PSModuleManifest -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
-    Build-PSModuleRootModule -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
-    Build-PSModuleDocumentation -ModuleFolderPath $moduleOutputFolderPath -DocsOutputFolderPath $docsOutputFolder
+    Build-PSModuleBase -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
+    Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
+    Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
+    Build-PSModuleDocumentation -SourceFolderPath $moduleOutputFolder -OutputFolderPath $docsOutputFolder
 
     Write-Verbose "[$moduleName] - Done"
 }

@@ -3,19 +3,19 @@
     param(
         # Path to the folder where the module source code is located.
         [Parameter(Mandatory)]
-        [string] $ModuleFolderPath,
+        [string] $SourceFolderPath,
 
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
         [string] $OutputFolderPath
     )
 
-    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
+    $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Build manifest file"
 
     Write-Verbose "[$($task -join '] - [')] - Finding manifest file"
     $manifestFileName = "$moduleName.psd1"
-    $manifestFilePath = Join-Path -Path $ModuleFolderPath $manifestFileName
+    $manifestFilePath = Join-Path -Path $SourceFolderPath $manifestFileName
 
     Write-Verbose "[$($task -join '] - [')] - Creating new manifest file in outputs folder"
     $outputManifestPath = (Join-Path -Path $moduleOutputFolder $manifestFileName)
@@ -35,7 +35,7 @@
     Write-Output "::group::[$($task -join '] - [')]"
     Write-Output "::group::[$($task -join '] - [')] - Processing manifest file"
     $moduleFileName = "$moduleName.psm1"
-    $moduleFilePath = Join-Path -Path $ModuleFolderPath $moduleFileName
+    $moduleFilePath = Join-Path -Path $SourceFolderPath $moduleFileName
     $moduleFile = Get-Item -Path $moduleFilePath -ErrorAction SilentlyContinue
     if ($moduleFile) {
         $manifest.RootModule = [string]::IsNullOrEmpty($manifest.RootModule) ? $moduleFileName : $manifest.RootModule
@@ -95,7 +95,7 @@
     Write-Verbose "[$($task -join '] - [')] - [FileList]"
     $files = $moduleFolder | Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object -Property Name -NotLike '*.ps1'
     $files += $moduleFolder | Get-ChildItem -Directory | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
-    $files = $files | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+    $files = $files | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $fileList = $files | Where-Object { $_ -notLike 'public*' -and $_ -notLike 'private*' -and $_ -notLike 'classes*' }
     $manifest.FileList = $fileList.count -eq 0 ? @() : @($fileList)
     $manifest.FileList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FileList] - [$_]" }
@@ -104,7 +104,7 @@
     $requiredAssembliesFolderPath = Join-Path $moduleFolder 'assemblies'
     $requiredAssemblies = Get-ChildItem -Path $RequiredAssembliesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Filter '*.dll' |
         Select-Object -ExpandProperty FullName |
-        ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+        ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.RequiredAssemblies = $requiredAssemblies.count -eq 0 ? @() : @($requiredAssemblies)
     $manifest.RequiredAssemblies | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [RequiredAssemblies] - [$_]" }
 
@@ -112,7 +112,7 @@
     $nestedModulesFolderPath = Join-Path $moduleFolder 'modules'
     $nestedModules = Get-ChildItem -Path $nestedModulesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1', '*.ps1' |
         Select-Object -ExpandProperty FullName |
-        ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+        ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.NestedModules = $nestedModules.count -eq 0 ? @() : @($nestedModules)
     $manifest.NestedModules | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [NestedModules] - [$_]" }
 
@@ -122,7 +122,7 @@
         $scriptsFolderPath = Join-Path $moduleFolder $_
         $scriptsToProcess = Get-ChildItem -Path $scriptsFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.ps1' |
             Select-Object -ExpandProperty FullName |
-            ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+            ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
             $scriptsToProcess
         }
         $manifest.ScriptsToProcess = $allScriptsToProcess.count -eq 0 ? @() : @($allScriptsToProcess)
@@ -131,14 +131,14 @@
         Write-Verbose "[$($task -join '] - [')] - [TypesToProcess]"
         $typesToProcess = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.Types.ps1xml' |
             Select-Object -ExpandProperty FullName |
-            ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+            ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.TypesToProcess = $typesToProcess.count -eq 0 ? @() : @($typesToProcess)
     $manifest.TypesToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [TypesToProcess] - [$_]" }
 
     Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess]"
     $formatsToProcess = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.Format.ps1xml' |
         Select-Object -ExpandProperty FullName |
-        ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+        ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.FormatsToProcess = $formatsToProcess.count -eq 0 ? @() : @($formatsToProcess)
     $manifest.FormatsToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess] - [$_]" }
 
@@ -146,7 +146,7 @@
     $dscResourcesToExportFolderPath = Join-Path $moduleFolder 'dscResources'
     $dscResourcesToExport = Get-ChildItem -Path $dscResourcesToExportFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' |
         Select-Object -ExpandProperty FullName |
-        ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+        ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.DscResourcesToExport = $dscResourcesToExport.count -eq 0 ? @() : @($dscResourcesToExport)
     $manifest.DscResourcesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport] - [$_]" }
 
@@ -175,7 +175,7 @@
     Write-Verbose "[$($task -join '] - [')] - [ModuleList]"
     $moduleList = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' -Exclude "$moduleName.psm1" |
         Select-Object -ExpandProperty FullName |
-        ForEach-Object { $_.Replace($ModuleFolderPath, '').TrimStart($pathSeparator) }
+        ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.ModuleList = $moduleList.count -eq 0 ? @() : @($moduleList)
     $manifest.ModuleList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ModuleList] - [$_]" }
 
@@ -187,7 +187,7 @@
 
     $files = $moduleFolder | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
     foreach ($file in $files) {
-        $relativePath = $file.FullName.Replace($ModuleFolderPath, '').TrimStart($pathSeparator)
+        $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
         $task.Add($relativePath)
         Write-Verbose "[$($task -join '] - [')] - Processing"
 

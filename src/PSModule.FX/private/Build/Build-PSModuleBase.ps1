@@ -3,14 +3,14 @@
     param(
         # Path to the folder where the module source code is located.
         [Parameter(Mandatory)]
-        [string] $ModuleFolderPath,
+        [string] $SourceFolderPath,
 
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
-        [string] $ModuleOutputFolderPath
+        [string] $OutputFolderPath
     )
 
-    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
+    $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Build base"
 
     $ignorePaths = @(
@@ -19,15 +19,15 @@
         'public',
         "$moduleName.psd1"
     )
-    Write-Verbose "Copying files from [$ModuleFolderPath] to [$OutputFolderPath]"
+    Write-Verbose "Copying files from [$SourceFolderPath] to [$OutputFolderPath]"
     $ignorePaths | ForEach-Object {
         Write-Verbose "Ignoring path [$_]"
     }
 
-    Copy-Item -Path "$moduleFolder/*" -Destination $ModuleOutputFolderPath -Recurse -Verbose
+    Copy-Item -Path "$moduleFolder/*" -Destination $OutputFolderPath -Recurse -Verbose
     Write-Output '::endgroup::'
 
     "::group::[$moduleName] - Build base - Result"
-    (Get-ChildItem -Path $ModuleOutputFolderPath -Recurse -Force).FullName | Sort-Object
+    (Get-ChildItem -Path $OutputFolderPath -Recurse -Force).FullName | Sort-Object
     Write-Output '::endgroup::'
 }

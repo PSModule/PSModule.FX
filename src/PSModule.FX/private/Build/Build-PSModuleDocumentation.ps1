@@ -3,14 +3,14 @@
     param(
         # Path to the folder where the module source code is located.
         [Parameter(Mandatory)]
-        [string] $ModuleFolderPath,
+        [string] $SourceFolderPath,
 
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
         [string] $OutputFolderPath
     )
 
-    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
+    $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Build documentation"
 
     Write-Output "::group::[$moduleName] - Resolving modules"
