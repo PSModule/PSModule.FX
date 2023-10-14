@@ -24,10 +24,10 @@
         Write-Verbose "Ignoring path [$_]"
     }
 
-    Copy-Item -Destination $ModuleOutputFolderPath -Recurse -Verbose
+    Copy-Item -Path "$moduleFolder/*" -Destination $ModuleOutputFolderPath -Recurse -Verbose
+    Write-Output '::endgroup::'
 
-    Copy-Item -Path "$moduleFolder/*" -Destination $OutputFolderPath -Recurse -Verbose
-
-    (Get-ChildItem -Path $outputsFolder -Recurse -Force).FullName | Sort-Object
+    "::group::[$moduleName] - Build base - Result"
+    (Get-ChildItem -Path $ModuleOutputFolderPath -Recurse -Force).FullName | Sort-Object
     Write-Output '::endgroup::'
 }
