@@ -35,8 +35,8 @@
     $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
     Build-PSModuleBase -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
-    Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
     Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
+    Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
     Build-PSModuleDocumentation -SourceFolderPath $modulesOutputFolder -OutputFolderPath $docsOutputFolder
 
     Write-Verbose "[$moduleName] - Done"
