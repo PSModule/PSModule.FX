@@ -26,16 +26,24 @@ function Build-PSModule {
 
         # Path to the folder where the built modules are outputted.
         [Parameter()]
-        [string] $OutputPath = 'outputs'
+        [string] $OutputPath = 'outputs',
+
+        # Deletes the source folder for the given module.
+        [Parameter()]
+        [switch] $Force
     )
 
-    Write-Output "::group::[Build-PSModule] - Starting..."
+    $functionName = $PSCmdlet.MyInvocation.MyCommand.Name
+
+    Write-Output "::group::[$functionName] - Starting..."
 
     $moduleFolders = Get-ModuleFolders -Path $Path
-    Write-Verbose "[$($task -join '] - [')] - Found $($moduleFolders.Count) module(s)"
-    $moduleFolders | ForEach-Object { Write-Verbose "[Build-PSModule] - [$($_.Name)]" }
+    Write-Verbose "[$functionName] - Found $($moduleFolders.Count) module(s)"
+    $moduleFolders | ForEach-Object {
+        Write-Verbose "[$functionName] - [$($_.Name)]"
+    }
 
-    # foreach ($moduleFolder in $moduleFolders) {
-    #     BuildModule -Path $moduleFolder.FullName -OutputPath $OutputPath
-    # }
+    foreach ($moduleFolder in $moduleFolders) {
+        Invoke-BuildPSModule -Path $moduleFolder.FullName -OutputPath $OutputPath
+    }
 }

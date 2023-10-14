@@ -1,4 +1,4 @@
-﻿function BuildModule {
+﻿function Invoke-BuildPSModule {
     #DECISION: The manifest file = name of the folder.
     param(
         # Path to the folder where the module source code is located.
@@ -22,15 +22,16 @@
     $task.Add($moduleName)
     Write-Output "::group::[$($task -join '] - [')]"
 
-
     $gitDiff = git diff --name-only
     $gitDiff | ForEach-Object {
         Write-Verbose "[$($task -join '] - [')] [git diff] - [$_]"
     }
     $hasChanges = $gitDiff.count -gt 0
     if (-not ($hasChanges -or $Force)) {
-        Write-Verbose "No changes detected"
-        Write-Output "::endgroup::"
+        Write-Verbose 'No changes detected'
+        Write-Output '::endgroup::'
+        return
+    } else {
         return
     }
 
