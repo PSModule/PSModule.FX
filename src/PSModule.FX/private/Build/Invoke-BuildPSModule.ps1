@@ -9,14 +9,12 @@
         [Parameter(Mandatory = $true)]
         [string] $OutputRootPath,
 
-        # Force the build even if there are no changes
+        # Deletes the source folder for the given module.
         [Parameter()]
         [switch] $Force
     )
 
     $task = New-Object System.Collections.Generic.List[string]
-    $task.Add('BuildModule')
-    Write-Output "::group::[$($task -join '] - [')] - Starting..."
 
     $moduleName = $moduleFolder.Name
     $task.Add($moduleName)
@@ -27,14 +25,14 @@
         Write-Verbose "[$($task -join '] - [')] [git diff] - [$_]"
     }
     $hasChanges = $gitDiff.count -gt 0
-    if (-not ($hasChanges -or $Force)) {
+    if (-not ($hasChanges)) {
         Write-Verbose 'No changes detected'
         Write-Output '::endgroup::'
         return
-    } else {
-        return
     }
 
+    return
+    
     Write-Verbose "[$($task -join '] - [')] - Processing"
     Write-Verbose "[$($task -join '] - [')] - ModuleFolderPath - [$ModuleFolderPath]"
 
