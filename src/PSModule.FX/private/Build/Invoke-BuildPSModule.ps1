@@ -378,7 +378,7 @@
 
     #Copy all the files in the modulefolder except the manifest file
     Write-Verbose "[$($task -join '] - [')] - Copying files from [$ModuleFolderPath] to [$moduleOutputFolder]"
-    Copy-Item -Path $moduleFolder -Destination $outputFolder -Recurse -Force -Exclude $manifestFileName -Verbose
+    Copy-Item -Path $moduleFolder -Destination $moduleOutputFolderPath -Recurse -Force -Exclude $manifestFileName -Verbose
 
     $env:PSModulePath += ";$moduleOutputFolderPath"
 
