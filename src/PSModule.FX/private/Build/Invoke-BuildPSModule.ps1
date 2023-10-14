@@ -1,5 +1,13 @@
 ﻿function Invoke-BuildPSModule {
     #DECISION: The manifest file = name of the folder.
+    #DECISION: The basis of the module manifest comes from the defined manifest file.
+    #DECISION: Values that are not defined in the module manifest file are generated from reading the module files.
+    #DECISION: If no RootModule is defined in the manifest file, we assume a .psm1 file with the same name as the module is on root.
+    #DECISION: Currently only Script and Manifest modules are supported.
+
+    #DECISION: The output folder = .\outputs on the root of the repo.
+    #DECISION: The module that is build is stored under the output folder in a folder with the same name as the module.
+    #DECISION: A new module manifest file is created every time to get a new GUID, so that the specific version of the module can be imported.
     param(
         # Path to the folder where the module source code is located.
         [Parameter(Mandatory)]
@@ -18,24 +26,10 @@
     $task.Add('Build-PSModule')
     $moduleName = $moduleFolder.Name
     $task.Add($moduleName)
+
     Write-Output "::group::[$($task -join '] - [')]"
-    git diff HEAD^ HEAD
-    $gitDiff = git diff --name-only HEAD^ HEAD
-    $gitDiff | ForEach-Object {
-        Write-Verbose "[$($task -join '] - [')] [git diff] - [$_]"
-    }
-    $hasChanges = $gitDiff.count -gt 0
-    if (-not ($hasChanges)) {
-        Write-Verbose 'No changes detected'
-        Write-Output '::endgroup::'
-        return
-    }
-
-    return
-
     Write-Verbose "[$($task -join '] - [')] - Processing"
     Write-Verbose "[$($task -join '] - [')] - ModuleFolderPath - [$ModuleFolderPath]"
-
     Write-Verbose "[$($task -join '] - [')] - Finding manifest file"
 
     $manifestFileName = "$moduleName.psd1"
@@ -47,17 +41,12 @@
         continue
     }
     Write-Verbose "[$($task -join '] - [')] - [$manifestFileName] - 🟩 Found manifest file"
-    #DECISION: The basis of the module manifest comes from the defined manifest file.
-    #DECISION: Values that are not defined in the module manifest file are generated from reading the module files.
-
     Write-Verbose "[$($task -join '] - [')] - [$manifestFileName] - Processing"
     $manifest = Import-PowerShellDataFile $manifestFilePath
 
     $task.Add('Manifest')
     Write-Output "::group::[$($task -join '] - [')]"
     Write-Output "::group::[$($task -join '] - [')] - Processing manifest file"
-
-    #DECISION: If no RootModule is defined in the manifest file, we assume a .psm1 file with the same name as the module is on root.
     $moduleFileName = "$moduleName.psm1"
     $moduleFilePath = Join-Path -Path $ModuleFolderPath $moduleFileName
     $moduleFile = Get-Item -Path $moduleFilePath -ErrorAction SilentlyContinue
@@ -76,7 +65,7 @@
         default { 'Manifest' }
     }
     Write-Verbose "[$($task -join '] - [')] - [ModuleType] - [$moduleType]"
-    #DECISION: Currently only Script and Manifest modules are supported.
+
     $supportedModuleTypes = @('Script', 'Manifest')
     if ($moduleType -notin $supportedModuleTypes) {
         Write-Error "[$($task -join '] - [')] - [ModuleType] - [$moduleType] - Module type not supported"
@@ -85,7 +74,6 @@
 
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$($task -join '] - [')] - [Author] - [$($manifest.Author)]"
-
 
     $manifest.CompanyName = $manifest.Keys -contains 'CompanyName' ? -not [string]::IsNullOrEmpty($manifest.CompanyName) ? $manifest.CompanyName : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$($task -join '] - [')] - [CompanyName] - [$($manifest.CompanyName)]"
@@ -378,27 +366,22 @@
     #>
 
 
-    $task.Add('Outputs')
+    $task.Add('Output')
     Write-Output "::group::[$($task -join '] - [')]"
 
-    #DECISION: The output folder = .\outputs on the root of the repo.
-    #DECISION: The module that is build is stored under the output folder in a folder with the same name as the module.
-    $outputsFolderName = 'outputs'
-    $outputsFolderPath = Join-Path -Path '.' $outputsFolderName
-    Write-Verbose "[$($task -join '] - [')] - Creating outputs folder [$outputsFolderPath]"
-    $outputsFolder = New-Item -Path $outputsFolderPath -ItemType Directory -Force
+    Write-Verbose "[$($task -join '] - [')] - Creating outputs folder [$OutputFolderPath]"
+    $outputFolder = New-Item -Path $OutputFolderPath -ItemType Directory -Force
 
-    $moduleOutputFolderPath = Join-Path -Path $outputsFolder $moduleName
+    $moduleOutputFolderPath = Join-Path -Path $outputFolder 'modules' $moduleName
     Write-Verbose "[$($task -join '] - [')] - Creating module output folder [$moduleOutputFolderPath]"
     $moduleOutputFolder = New-Item -Path $moduleOutputFolderPath -ItemType Directory -Force
 
     #Copy all the files in the modulefolder except the manifest file
     Write-Verbose "[$($task -join '] - [')] - Copying files from [$ModuleFolderPath] to [$moduleOutputFolder]"
-    Copy-Item -Path $moduleFolder -Destination $outputsFolder -Recurse -Force -Exclude $manifestFileName
+    Copy-Item -Path $moduleFolder -Destination $outputFolder -Recurse -Force -Exclude $manifestFileName
 
     $env:PSModulePath += ";$moduleOutputFolderPath"
 
-    #DECISION: A new module manifest file is created every time to get a new GUID, so that the specific version of the module can be imported.
     Write-Verbose "[$($task -join '] - [')] - Creating new manifest file in outputs folder"
     $outputManifestPath = (Join-Path -Path $moduleOutputFolder $manifestFileName)
     New-ModuleManifest -Path $outputManifestPath @manifest
