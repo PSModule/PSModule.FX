@@ -7,7 +7,7 @@
 
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory = $true)]
-        [string] $OutputRootPath,
+        [string] $OutputFolderPath,
 
         # Deletes the source folder for the given module.
         [Parameter()]
@@ -32,7 +32,7 @@
     }
 
     return
-    
+
     Write-Verbose "[$($task -join '] - [')] - Processing"
     Write-Verbose "[$($task -join '] - [')] - ModuleFolderPath - [$ModuleFolderPath]"
 
