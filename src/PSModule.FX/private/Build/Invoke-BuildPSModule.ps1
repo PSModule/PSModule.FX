@@ -131,7 +131,7 @@
 
     Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess]"
     $allScriptsToProcess = @('scripts', 'classes') | ForEach-Object {
-        Write-Verbose "[$($task -join '] - [')] - [Processing $_]"
+        Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess] - Processing [$_]"
         $scriptsFolderPath = Join-Path $moduleFolder $_
         $scriptsToProcess = Get-ChildItem -Path $scriptsFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.ps1' |
             Select-Object -ExpandProperty FullName |
@@ -378,7 +378,7 @@
 
     #Copy all the files in the modulefolder except the manifest file
     Write-Verbose "[$($task -join '] - [')] - Copying files from [$ModuleFolderPath] to [$moduleOutputFolder]"
-    Copy-Item -Path $moduleFolder -Destination $outputFolder -Recurse -Force -Exclude $manifestFileName
+    Copy-Item -Path $moduleFolder -Destination $outputFolder -Recurse -Force -Exclude $manifestFileName -Verbose
 
     $env:PSModulePath += ";$moduleOutputFolderPath"
 
