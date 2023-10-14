@@ -25,19 +25,19 @@
 
     $moduleSourceFolder = Get-Item -Path $ModuleFolderPath
 
-    $moduleOutputFolderPath = Join-Path -Path $OutputFolderPath 'modules' $moduleName
-    Write-Verbose "Creating module output folder [$moduleOutputFolderPath]"
-    $moduleOutputFolder = New-Item -Path $moduleOutputFolderPath -ItemType Directory -Force
-    $env:PSModulePath += ";$moduleOutputFolderPath"
+    $modulesOutputFolderPath = Join-Path -Path $OutputFolderPath 'modules'
+    Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"
+    $modulesOutputFolder = New-Item -Path $modulesOutputFolderPath -ItemType Directory -Force
+    $env:PSModulePath += ";$modulesOutputFolderPath"
 
-    $docsOutputFolderPath = Join-Path -Path $OutputFolderPath 'docs' $moduleName
+    $docsOutputFolderPath = Join-Path -Path $OutputFolderPath 'docs'
     Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
     $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
-    Build-PSModuleBase -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleDocumentation -SourceFolderPath $moduleOutputFolder -OutputFolderPath $docsOutputFolder
+    Build-PSModuleBase -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
+    Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
+    Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
+    Build-PSModuleDocumentation -SourceFolderPath $modulesOutputFolder -OutputFolderPath $docsOutputFolder
 
     Write-Verbose "[$moduleName] - Done"
 }
