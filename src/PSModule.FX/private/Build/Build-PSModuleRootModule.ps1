@@ -19,7 +19,7 @@
 
     # RE-create the moduleName.psm1 file
     # concat all the files, and add Export-ModuleMembers at the end with modules.
-    $rootModuleFile = New-Item -Path $moduleOutputFolderPath -Name $manifest.RootModule -Force
+    $rootModuleFile = New-Item -Path $OutputFolderPath -Name "$moduleName.psm1" -Force
 
     # Add content to the root module file in the following order:
     # 1. Load data files from Data folder
