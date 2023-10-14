@@ -1,4 +1,4 @@
-﻿function Get-ModuleFolders {
+﻿function Get-PSModuleFolders {
     <#
         .SYNOPSIS
         Get all folders where the content of the folder is a module file or manifest file.
@@ -8,7 +8,7 @@
         Search is recursive.
 
         .EXAMPLE
-        Get-ModuleFolders -Path 'src'
+        Get-PSModuleFolders -Path 'src'
 
         Get all folders where the content of the folder is a module file or manifest file.
     #>
