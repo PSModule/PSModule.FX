@@ -15,12 +15,9 @@
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
 
-    $moduleFileName = $(Get-ChildItem -Path $PSScriptRoot -File | Where-Object { $_.BaseName -like $_.Directory.BaseName -and ($_.Extension -in '.psm1', '.ps1', '.dll', '.cdxml', '.xaml') } | Select-Object -First 1 -ExpandProperty Name )
-    $moduleFilePath = Join-Path -Path $SourceFolderPath $moduleFileName
-    if (Test-Path -Path $moduleFilePath) {
-        $RootModule = [string]::IsNullOrEmpty($RootModule) ? $moduleFileName : $RootModule
-    } else {
-        $RootModule = $null
+    $moduleFileName = $(Get-ChildItem -Path $SourceFolderPath -File | Where-Object { $_.BaseName -like $_.Directory.BaseName -and ($_.Extension -in '.psm1', '.ps1', '.dll', '.cdxml', '.xaml') } | Select-Object -First 1 -ExpandProperty Name )
+    if ($moduleFilePath) {
+        $RootModule = $moduleFileName
     }
     Write-Verbose "[$moduleName] - [RootModule] - [$RootModule]"
 
