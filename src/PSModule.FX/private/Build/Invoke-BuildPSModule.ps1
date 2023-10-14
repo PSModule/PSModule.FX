@@ -19,8 +19,8 @@
     $moduleName = $moduleFolder.Name
     $task.Add($moduleName)
     Write-Output "::group::[$($task -join '] - [')]"
-
-    $gitDiff = git diff --name-only HEAD HEAD~
+    git diff HEAD^ HEAD
+    $gitDiff = git diff --name-only HEAD^ HEAD
     $gitDiff | ForEach-Object {
         Write-Verbose "[$($task -join '] - [')] [git diff] - [$_]"
     }
