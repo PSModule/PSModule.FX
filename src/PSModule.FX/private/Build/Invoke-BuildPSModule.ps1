@@ -2,11 +2,11 @@
     #DECISION: The manifest file = name of the folder.
     param(
         # Path to the folder where the module source code is located.
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string] $ModuleFolderPath,
 
         # Path to the folder where the built modules are outputted.
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string] $OutputFolderPath,
 
         # Deletes the source folder for the given module.

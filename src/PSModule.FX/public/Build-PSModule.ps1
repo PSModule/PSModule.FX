@@ -44,6 +44,6 @@ function Build-PSModule {
     }
 
     foreach ($moduleFolder in $moduleFolders) {
-        Invoke-BuildPSModule -ModuleFolderPath $moduleFolder.FullName -OutputFolderPath $OutputPath -Force $Force
+        Invoke-BuildPSModule -ModuleFolderPath $moduleFolder.FullName -OutputFolderPath $OutputPath -Force:$Force
     }
 }
