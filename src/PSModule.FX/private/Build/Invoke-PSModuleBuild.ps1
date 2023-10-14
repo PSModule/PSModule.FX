@@ -19,9 +19,11 @@
     )
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
-    
+
     Write-Output "::group::[$moduleName]"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
+
+    $moduleSourceFolder = Get-Item -Path $ModuleFolderPath
 
     $moduleOutputFolderPath = Join-Path -Path $OutputFolderPath 'modules' $moduleName
     Write-Verbose "Creating module output folder [$moduleOutputFolderPath]"
@@ -32,10 +34,10 @@
     Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
     $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
-    Build-PSModuleBase -ModuleFolderPath $ModuleFolderPath -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleManifest -ModuleFolderPath $ModuleFolderPath -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleRootModule -ModuleFolderPath $ModuleFolderPath -OutputFolderPath $moduleOutputFolder
-    Build-PSModuleDocumentation -ModuleFolderPath $moduleOutputFolderPath -OutputFolderPath $docsOutputFolder
+    Build-PSModuleBase -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
+    Build-PSModuleManifest -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
+    Build-PSModuleRootModule -ModuleFolderPath $moduleSourceFolder -ModuleOutputFolderPath $moduleOutputFolder
+    Build-PSModuleDocumentation -ModuleFolderPath $moduleOutputFolderPath -DocsOutputFolderPath $docsOutputFolder
 
     Write-Verbose "[$moduleName] - Done"
 }
