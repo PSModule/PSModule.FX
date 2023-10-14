@@ -15,12 +15,12 @@
     )
 
     $task = New-Object System.Collections.Generic.List[string]
-
+    $task.Add('Build-PSModule')
     $moduleName = $moduleFolder.Name
     $task.Add($moduleName)
     Write-Output "::group::[$($task -join '] - [')]"
 
-    $gitDiff = git diff --name-only
+    $gitDiff = git diff --name-only HEAD HEAD~
     $gitDiff | ForEach-Object {
         Write-Verbose "[$($task -join '] - [')] [git diff] - [$_]"
     }
