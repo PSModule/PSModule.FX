@@ -5,12 +5,12 @@
         [string] $ModuleFolderPath
     )
 
-    $moduleName = Split-Path -Path $ModulesFolder -Leaf
+    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
 
     Write-Output "::group::[$moduleName]"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
-    $moduleFolder = Get-Item -Path $ModuleFolder
+    $moduleFolder = Get-Item -Path $ModuleFolderPath
 
     Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
     Invoke-ScriptAnalyzer -Path $moduleFolder -Recurse -Verbose
