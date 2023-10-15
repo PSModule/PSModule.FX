@@ -1,7 +1,7 @@
 ﻿[CmdLetBinding()]
 Param(
     [Parameter(Mandatory = $true)]
-    [string]$TestLocation
+    [string] $Path
 )
 
 # Get all PSScript Analyzer Rules and save them in an array
@@ -23,7 +23,7 @@ foreach ($Severity in $Severities) {
             param ($RuleName)
 
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
-            Invoke-ScriptAnalyzer -Path $TestLocation -IncludeRule $RuleName -Recurse |
+            Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse |
                 ForEach-Object {
                     "Problem in $($_.ScriptName) at line $($_.Line) with message: $($_.Message)"
                 } | Should -BeNullOrEmpty
