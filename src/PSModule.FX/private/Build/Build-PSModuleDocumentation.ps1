@@ -13,9 +13,8 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Build documentation"
 
-    Write-Output "::group::[$moduleName] - Resolving modules"
-    Resolve-ModuleDependencies -Path $outputManifestPath
-    Write-Output '::endgroup::'
+    $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -Verbose:$false
+    Resolve-PSModuleDependencies -Path $manifestFile
 
     Write-Verbose "Importing module"
     Import-Module $moduleOutputFolderPath

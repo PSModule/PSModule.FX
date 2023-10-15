@@ -1,4 +1,4 @@
-﻿function Resolve-ModuleDependencies {
+﻿function Resolve-PSModuleDependencies {
     <#
     .SYNOPSIS
     Resolve dependencies for a module based on the manifest file.
@@ -7,7 +7,7 @@
     Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
 
     .EXAMPLE
-    Resolve-ModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
+    Resolve-PSModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
 
     Installs all modules defined in the manifest file, following PSModuleInfo structure.
 
@@ -19,12 +19,12 @@
     param(
         # The path to the manifest file.
         [Parameter(Mandatory)]
-        [string] $Path
+        [string] $ManifestFilePath
     )
     $action = $MyInvocation.MyCommand.Name
 
-    $manifest = Import-PowerShellDataFile -Path $Path
-    Write-Verbose "[$action] - Reading file [$Path]"
+    $manifest = Import-PowerShellDataFile -Path $ManifestFilePath
+    Write-Verbose "[$action] - Reading [$ManifestFilePath]"
     Write-Verbose "[$action] - Found [$($manifest.RequiredModules.Count)] modules to install"
 
     foreach ($requiredModule in $manifest.RequiredModules) {

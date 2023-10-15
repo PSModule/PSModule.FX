@@ -22,7 +22,8 @@
     )
     Write-Verbose "Copying files from [$SourceFolderPath] to [$OutputFolderPath]"
     Copy-Item -Path "$SourceFolderPath" -Destination $OutputFolderPath -Recurse -Force -Verbose
-    Get-ChildItem -Path $OutputFolderPath -Recurse -Force | Where-Object { $_.Name -in $deletePaths } | Remove-Item -Force -Recurse
+    Write-Verbose "Deleting files from [$OutputFolderPath] that are not needed"
+    Get-ChildItem -Path $OutputFolderPath -Recurse -Force | Where-Object { $_.Name -in $deletePaths } | Remove-Item -Force -Recurse -Verbose
     Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build base - Result"
