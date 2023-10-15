@@ -15,16 +15,16 @@
 
     # RE-create the moduleName.psm1 file
     # concat all the files, and add Export-ModuleMembers at the end with modules.
-    $rootModuleFile = New-Item -Path $OutputFolderPath -Name "$moduleName.psm1" -Force
+    $moduleOutputfolder = Join-Path -Path $OutputFolderPath -ChildPath $moduleName
+    $rootModuleFile = New-Item -Path $moduleOutputfolder -Name "$moduleName.psm1" -Force
 
     # Add content to the root module file in the following order:
     # 1. Load data files from Data folder
     # 2. Init
-    # 3. Classes
-    # 4. Private
-    # 5. Public
-    # 6  *.ps1 on module root
-    # 7. Export-ModuleMember
+    # 3. Private
+    # 4. Public
+    # 5  *.ps1 on module root
+    # 6. Export-ModuleMember
 
     Add-Content -Path $rootModuleFile.FullName -Value @'
 [Cmdletbinding()]
