@@ -14,6 +14,51 @@
 
     Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
     Invoke-Pester -Path .\PSSA.Tests.ps1 -Script @{ ModulePath = $moduleFolder.FullName }
+
+
+
+    Write-Verbose "SearchFolder (to look for PS files):" -Verbose
+    Write-Verbose "$($SearchFolder)" -Verbose
+
+    $pesterCommand = Get-Command Invoke-Pester
+
+    Write-Verbose "Testing with PowerShell $($PSVersionTable.PSVersion.ToString())" -Verbose
+    Write-Verbose "Testing with Pester $($pesterCommand.version)" -Verbose
+
+    $container = New-PesterContainer -Path (Join-Path $PSScriptRoot "tests")
+
+    $container.Data = @{
+        SearchFolder = $SearchFolder
+    }
+    $pesterFunctionParams = New-PesterConfiguration
+    $pesterFunctionParams.Run.PassThru = $true
+    $pesterFunctionParams.Run.Container = $container
+
+    if ($PSBoundParameters.OutputResults.IsPresent) {
+
+        # Producing test results when running in a pipeline
+        $pesterFunctionParams.TestResult.Enabled = $true
+        $pesterFunctionParams.TestResult.OutputPath = "pssa.testresults.xml"
+    }
+
+    $pesterResults = Invoke-Pester -Configuration $pesterFunctionParams
+    if ($pesterResults.FailedCount -gt 0) {
+        $pesterResults
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Write-Output "::endgroup::"
 
     Write-Verbose "[$moduleName] - Done"
