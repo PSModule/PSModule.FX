@@ -44,9 +44,15 @@
         $installParams.Force = $true
 
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Installing module"
+        $VerbosePreferenceOriginal = $VerbosePreference
+        $VerbosePreference = 'SilentlyContinue'
         Install-Module @installParams
+        $VerbosePreference = $VerbosePreferenceOriginal
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Importing module"
-        Import-Module @installParams
+        $VerbosePreferenceOriginal = $VerbosePreference
+        $VerbosePreference = 'SilentlyContinue'
+        Import-Module @installParams -WarningAction SilentlyContinue
+        $VerbosePreference = $VerbosePreferenceOriginal
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Done"
     }
     Write-Verbose "[$moduleName] - Done"
