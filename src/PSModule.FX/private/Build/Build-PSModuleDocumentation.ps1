@@ -18,6 +18,10 @@
 
     Write-Verbose "[$moduleName] - Importing module"
     $env:PSModulePath += ";$SourceFolderPath"
+    Write-Verbose "[$moduleName] - PSModulePath"
+    $env:PSModulePath.Split(';') | ForEach-Object {
+        Write-Verbose "[$moduleName] - PSModulePath - [$_]"
+    }
     Import-Module $moduleName
 
     Write-Verbose "[$moduleName] - List loaded modules"
