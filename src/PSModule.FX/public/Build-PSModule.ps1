@@ -29,9 +29,16 @@ function Build-PSModule {
         [string] $OutputPath = 'outputs'
     )
 
-    $functionName = $PSCmdlet.MyInvocation.MyCommand.Name
-
     Write-Output "::group::Starting..."
+
+    $modulesOutputFolderPath = Join-Path -Path $OutputPath 'modules'
+    Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"
+    $modulesOutputFolder = New-Item -Path $modulesOutputFolderPath -ItemType Directory -Force
+    Add-PSModulePath -Path $modulesOutputFolder
+
+    $docsOutputFolderPath = Join-Path -Path $OutputPath 'docs'
+    Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
+    $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
     $moduleFolders = Get-PSModuleFolders -Path $Path
     Write-Verbose "Found $($moduleFolders.Count) module(s)"
@@ -40,6 +47,6 @@ function Build-PSModule {
     }
 
     foreach ($moduleFolder in $moduleFolders) {
-        Invoke-PSModuleBuild -ModuleFolderPath $moduleFolder.FullName -OutputFolderPath $OutputPath
+        Invoke-PSModuleBuild -ModuleFolderPath $moduleFolder.FullName -ModulesOutputFolder $modulesOutputFolder -DocsOutputFolder $docsOutputFolder
     }
 }

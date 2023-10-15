@@ -15,7 +15,11 @@
 
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
-        [string] $OutputFolderPath
+        [string] $ModulesOutputFolder,
+
+        # Path to the folder where the built module documentation is outputted.
+        [Parameter(Mandatory)]
+        [string] $DocsOutputFolder
     )
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
@@ -24,16 +28,6 @@
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
     $moduleSourceFolder = Get-Item -Path $ModuleFolderPath
-
-    $modulesOutputFolderPath = Join-Path -Path $OutputFolderPath 'modules'
-    Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"
-    $modulesOutputFolder = New-Item -Path $modulesOutputFolderPath -ItemType Directory -Force
-    Add-PSModulePath -Path $modulesOutputFolder
-
-    $env:PSModulePath += "$PSModulePathSeparator$SourceFolderPath"
-    $docsOutputFolderPath = Join-Path -Path $OutputFolderPath 'docs'
-    Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
-    $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
     Build-PSModuleBase -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
     Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
