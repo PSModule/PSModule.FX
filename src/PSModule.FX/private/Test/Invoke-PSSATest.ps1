@@ -23,8 +23,6 @@
     }
     $container = New-PesterContainer @containerParams
 
-    
-
     Invoke-Pester -Configuration @{
         Run        = @{
             Container = $container
@@ -38,6 +36,7 @@
         }
         Output     = @{
             Verbosity = 'Detailed'
+            StackTraceVerbosity = 'None'
         }
     } -ErrorAction 'Stop'
 }
