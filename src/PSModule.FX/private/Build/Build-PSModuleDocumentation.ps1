@@ -20,14 +20,19 @@
     Import-Module $moduleName
 
     Write-Verbose "[$moduleName] - List loaded modules"
-    $availableModules = Get-Module -Verbose:$false
+    $availableModules = Get-Module -Refresh -Verbose:$false
     $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
 
     if ($moduleName -notin $availableModules.Name) {
         throw "[$moduleName] - Module not found"
     }
 
-    New-MarkdownHelp -Module $moduleName -OutputFolder $OutputFolderPath -Force
+    New-MarkdownHelp -Module $moduleName -OutputFolder $OutputFolderPath -Force -Verbose
     Write-Output '::endgroup::'
 
+    Write-Output "::group::[$moduleName] - Build documentation - Result"
+    Get-ChildItem -Path $OutputFolderPath -Recurse -Force -Include '*.md' | ForEach-Object {
+        Write-Output "::debug::[$moduleName] - [$_] - [$(Get-FileHash -Path $_.FullName -Algorithm SHA256)]"
+    }
+    Write-Output '::endgroup::'
 }
