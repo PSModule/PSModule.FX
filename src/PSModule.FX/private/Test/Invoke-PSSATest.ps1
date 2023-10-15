@@ -22,7 +22,7 @@
         }
     }
     Write-Verbose 'ContainerParams:'
-    Write-Verbose "$($containerParams | Out-String)"
+    Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
 
 
     $pesterParams = @{
@@ -45,7 +45,7 @@
         ErrorAction   = 'Stop'
     }
     Write-Verbose 'PesterParams:'
-    Write-Verbose "$($pesterParams | Out-String)"
+    Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 5)"
 
     Invoke-Pester @pesterParams
 
