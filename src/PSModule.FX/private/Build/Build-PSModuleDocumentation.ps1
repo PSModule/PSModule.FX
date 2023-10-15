@@ -23,9 +23,10 @@
     $availableModules = Get-Module -Verbose:$false
     $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
 
-    if ($moduleName -notin $availableModules) {
+    if ($moduleName -notin $availableModules.Name) {
         throw "[$moduleName] - Module not found"
     }
+
     New-MarkdownHelp -Module $moduleName -OutputFolder $OutputFolderPath -Force
     Write-Output '::endgroup::'
 
