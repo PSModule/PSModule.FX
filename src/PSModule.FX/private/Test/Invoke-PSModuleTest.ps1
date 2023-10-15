@@ -10,10 +10,9 @@
     Write-Output "::group::[$moduleName]"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
+    Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
     Invoke-PSSATest -ModuleFolder $moduleFolder -Verbose:$false
-    Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
-
     Write-Output "::endgroup::"
 
     Write-Verbose "[$moduleName] - Done"
