@@ -24,65 +24,65 @@
     $manifest.RootModule = Get-PSModuleRootModule -SourceFolderPath $SourceFolderPath
 
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
-    Write-Verbose "[$($task -join '] - [')] - [Author] - [$($manifest.Author)]"
+    Write-Verbose "[$moduleName] - [Author] - [$($manifest.Author)]"
 
     $manifest.CompanyName = $manifest.Keys -contains 'CompanyName' ? -not [string]::IsNullOrEmpty($manifest.CompanyName) ? $manifest.CompanyName : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
-    Write-Verbose "[$($task -join '] - [')] - [CompanyName] - [$($manifest.CompanyName)]"
+    Write-Verbose "[$moduleName] - [CompanyName] - [$($manifest.CompanyName)]"
 
     $year = Get-Date -Format 'yyyy'
     $copyRightOwner = $manifest.CompanyName -eq $manifest.Author ? $manifest.Author : "$($manifest.Author) | $($manifest.CompanyName)"
     $copyRight = "(c) $year $copyRightOwner. All rights reserved."
     $manifest.CopyRight = $manifest.Keys -contains 'CopyRight' ? -not [string]::IsNullOrEmpty($manifest.CopyRight) ? $manifest.CopyRight : $copyRight : $copyRight
-    Write-Verbose "[$($task -join '] - [')] - [CopyRight] - [$($manifest.CopyRight)]"
+    Write-Verbose "[$moduleName] - [CopyRight] - [$($manifest.CopyRight)]"
 
     $manifest.Description = $manifest.Keys -contains 'Description' ? -not [string]::IsNullOrEmpty($manifest.Description) ? $manifest.Description : 'Unknown' : 'Unknown'
-    Write-Verbose "[$($task -join '] - [')] - [Description] - [$($manifest.Description)]"
+    Write-Verbose "[$moduleName] - [Description] - [$($manifest.Description)]"
 
     $manifest.PowerShellHostName = $manifest.Keys -contains 'PowerShellHostName' ? -not [string]::IsNullOrEmpty($manifest.PowerShellHostName) ? $manifest.PowerShellHostName : $null : $null
-    Write-Verbose "[$($task -join '] - [')] - [PowerShellHostName] - [$($manifest.PowerShellHostName)]"
+    Write-Verbose "[$moduleName] - [PowerShellHostName] - [$($manifest.PowerShellHostName)]"
 
     $manifest.PowerShellHostVersion = $manifest.Keys -contains 'PowerShellHostVersion' ? -not [string]::IsNullOrEmpty($manifest.PowerShellHostVersion) ? $manifest.PowerShellHostVersion : $null : $null
-    Write-Verbose "[$($task -join '] - [')] - [PowerShellHostVersion] - [$($manifest.PowerShellHostVersion)]"
+    Write-Verbose "[$moduleName] - [PowerShellHostVersion] - [$($manifest.PowerShellHostVersion)]"
 
     $manifest.DotNetFrameworkVersion = $manifest.Keys -contains 'DotNetFrameworkVersion' ? -not [string]::IsNullOrEmpty($manifest.DotNetFrameworkVersion) ? $manifest.DotNetFrameworkVersion : $null : $null
-    Write-Verbose "[$($task -join '] - [')] - [DotNetFrameworkVersion] - [$($manifest.DotNetFrameworkVersion)]"
+    Write-Verbose "[$moduleName] - [DotNetFrameworkVersion] - [$($manifest.DotNetFrameworkVersion)]"
 
     $manifest.ClrVersion = $manifest.Keys -contains 'ClrVersion' ? -not [string]::IsNullOrEmpty($manifest.ClrVersion) ? $manifest.ClrVersion : $null : $null
-    Write-Verbose "[$($task -join '] - [')] - [ClrVersion] - [$($manifest.ClrVersion)]"
+    Write-Verbose "[$moduleName] - [ClrVersion] - [$($manifest.ClrVersion)]"
 
     $manifest.ProcessorArchitecture = $manifest.Keys -contains 'ProcessorArchitecture' ? -not [string]::IsNullOrEmpty($manifest.ProcessorArchitecture) ? $manifest.ProcessorArchitecture : 'None' : 'None'
-    Write-Verbose "[$($task -join '] - [')] - [ProcessorArchitecture] - [$($manifest.ProcessorArchitecture)]"
+    Write-Verbose "[$moduleName] - [ProcessorArchitecture] - [$($manifest.ProcessorArchitecture)]"
 
     #Get the path separator for the current OS
     $pathSeparator = [System.IO.Path]::DirectorySeparatorChar
 
-    Write-Verbose "[$($task -join '] - [')] - [FileList]"
+    Write-Verbose "[$moduleName] - [FileList]"
     $files = $SourceFolderPath | Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object -Property Name -NotLike '*.ps1'
     $files += $SourceFolderPath | Get-ChildItem -Directory | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
     $files = $files | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $fileList = $files | Where-Object { $_ -notLike 'public*' -and $_ -notLike 'private*' -and $_ -notLike 'classes*' }
     $manifest.FileList = $fileList.count -eq 0 ? @() : @($fileList)
-    $manifest.FileList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FileList] - [$_]" }
+    $manifest.FileList | ForEach-Object { Write-Verbose "[$moduleName] - [FileList] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [RequiredAssemblies]"
+    Write-Verbose "[$moduleName] - [RequiredAssemblies]"
     $requiredAssembliesFolderPath = Join-Path $SourceFolderPath 'assemblies'
     $requiredAssemblies = Get-ChildItem -Path $RequiredAssembliesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Filter '*.dll' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.RequiredAssemblies = $requiredAssemblies.count -eq 0 ? @() : @($requiredAssemblies)
-    $manifest.RequiredAssemblies | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [RequiredAssemblies] - [$_]" }
+    $manifest.RequiredAssemblies | ForEach-Object { Write-Verbose "[$moduleName] - [RequiredAssemblies] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [NestedModules]"
+    Write-Verbose "[$moduleName] - [NestedModules]"
     $nestedModulesFolderPath = Join-Path $SourceFolderPath 'modules'
     $nestedModules = Get-ChildItem -Path $nestedModulesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1', '*.ps1' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.NestedModules = $nestedModules.count -eq 0 ? @() : @($nestedModules)
-    $manifest.NestedModules | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [NestedModules] - [$_]" }
+    $manifest.NestedModules | ForEach-Object { Write-Verbose "[$moduleName] - [NestedModules] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess]"
+    Write-Verbose "[$moduleName] - [ScriptsToProcess]"
     $allScriptsToProcess = @('scripts', 'classes') | ForEach-Object {
-        Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess] - Processing [$_]"
+        Write-Verbose "[$moduleName] - [ScriptsToProcess] - Processing [$_]"
         $scriptsFolderPath = Join-Path $SourceFolderPath $_
         $scriptsToProcess = Get-ChildItem -Path $scriptsFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.ps1' |
             Select-Object -ExpandProperty FullName |
@@ -90,53 +90,53 @@
             $scriptsToProcess
         }
         $manifest.ScriptsToProcess = $allScriptsToProcess.count -eq 0 ? @() : @($allScriptsToProcess)
-        $manifest.ScriptsToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess] - [$_]" }
+        $manifest.ScriptsToProcess | ForEach-Object { Write-Verbose "[$moduleName] - [ScriptsToProcess] - [$_]" }
 
-        Write-Verbose "[$($task -join '] - [')] - [TypesToProcess]"
+        Write-Verbose "[$moduleName] - [TypesToProcess]"
         $typesToProcess = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.Types.ps1xml' |
             Select-Object -ExpandProperty FullName |
             ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.TypesToProcess = $typesToProcess.count -eq 0 ? @() : @($typesToProcess)
-    $manifest.TypesToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [TypesToProcess] - [$_]" }
+    $manifest.TypesToProcess | ForEach-Object { Write-Verbose "[$moduleName] - [TypesToProcess] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess]"
+    Write-Verbose "[$moduleName] - [FormatsToProcess]"
     $formatsToProcess = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.Format.ps1xml' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.FormatsToProcess = $formatsToProcess.count -eq 0 ? @() : @($formatsToProcess)
-    $manifest.FormatsToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess] - [$_]" }
+    $manifest.FormatsToProcess | ForEach-Object { Write-Verbose "[$moduleName] - [FormatsToProcess] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport]"
+    Write-Verbose "[$moduleName] - [DscResourcesToExport]"
     $dscResourcesToExportFolderPath = Join-Path $SourceFolderPath 'dscResources'
     $dscResourcesToExport = Get-ChildItem -Path $dscResourcesToExportFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.DscResourcesToExport = $dscResourcesToExport.count -eq 0 ? @() : @($dscResourcesToExport)
-    $manifest.DscResourcesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport] - [$_]" }
+    $manifest.DscResourcesToExport | ForEach-Object { Write-Verbose "[$moduleName] - [DscResourcesToExport] - [$_]" }
 
     $manifest.FunctionsToExport = Get-PSModuleFunctionsToExport -SourceFolderPath $SourceFolderPath
     $manifest.CmdletsToExport = Get-PSModuleCmdletsToExport -SourceFolderPath $SourceFolderPath
     $manifest.AliasesToExport = Get-PSModuleAliasesToExport -SourceFolderPath $SourceFolderPath
     $manifest.VariablesToExport = Get-PSModuleVariablesToExport -SourceFolderPath $SourceFolderPath
 
-    Write-Verbose "[$($task -join '] - [')] - [ModuleList]"
+    Write-Verbose "[$moduleName] - [ModuleList]"
     $moduleList = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' -Exclude "$moduleName.psm1" |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.ModuleList = $moduleList.count -eq 0 ? @() : @($moduleList)
-    $manifest.ModuleList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ModuleList] - [$_]" }
+    $manifest.ModuleList | ForEach-Object { Write-Verbose "[$moduleName] - [ModuleList] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - Gather dependencies from files"
+    Write-Verbose "[$moduleName] - Gather dependencies from files"
 
     $capturedModules = @()
     $capturedVersions = @()
     $capturedPSEdition = @()
 
     $files = $SourceFolderPath | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
+    Write-Verbose "[$moduleName] - Processing [$($files.Count)] files"
     foreach ($file in $files) {
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
-        $task.Add($relativePath)
-        Write-Verbose "[$($task -join '] - [')] - Processing"
+        Write-Verbose "[$moduleName] - Processing [$relativePath]"
 
         if ($moduleType -eq 'Script') {
             if ($file.extension -in '.psm1', '.ps1') {
@@ -148,7 +148,7 @@
                         # Add captured module name to array
                         $capturedMatches = $matches[1].Split(',').trim()
                         $capturedMatches | ForEach-Object {
-                            Write-Verbose "[$($task -join '] - [')] - [REQUIRED -Modules] - [$_]"
+                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_]"
                             $hashtable = '\@\s*\{[^\}]*\}'
                             if ($_ -match $hashtable) {
                                 $modules = Invoke-Expression $_ -ErrorAction SilentlyContinue
@@ -160,13 +160,13 @@
                     }
                     # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
                     '^#Requires -Version (.+)$' {
-                        Write-Verbose "[$($task -join '] - [')] - [REQUIRED -Version] - [$($matches[1])]"
+                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Version] - [$($matches[1])]"
                         # Add captured module name to array
                         $capturedVersions += $matches[1]
                     }
                     #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
                     '^#Requires -PSEdition (.+)$' {
-                        Write-Verbose "[$($task -join '] - [')] - [REQUIRED -PSEdition] - [$($matches[1])]"
+                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -PSEdition] - [$($matches[1])]"
                         # Add captured module name to array
                         $capturedPSEdition += $matches[1]
                     }
@@ -176,49 +176,49 @@
         $task.RemoveAt($task.Count - 1)
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [RequiredModules]"
+    Write-Verbose "[$moduleName] - [RequiredModules]"
     $capturedModules = $capturedModules
     $manifest.RequiredModules = $capturedModules
-    $manifest.RequiredModules | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [RequiredModules] - [$_]" }
+    $manifest.RequiredModules | ForEach-Object { Write-Verbose "[$moduleName] - [RequiredModules] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [RequiredModulesUnique]"
+    Write-Verbose "[$moduleName] - [RequiredModulesUnique]"
     $manifest.RequiredModules = $manifest.RequiredModules | Sort-Object -Unique
-    $manifest.RequiredModules | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [RequiredModulesUnique] - [$_]" }
+    $manifest.RequiredModules | ForEach-Object { Write-Verbose "[$moduleName] - [RequiredModulesUnique] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [PowerShellVersion]"
+    Write-Verbose "[$moduleName] - [PowerShellVersion]"
     $capturedVersions = $capturedVersions | Sort-Object -Unique -Descending
     $manifest.PowerShellVersion = $capturedVersions.count -eq 0 ? [version]'7.0' : [version]($capturedVersions | Select-Object -First 1)
-    Write-Verbose "[$($task -join '] - [')] - [PowerShellVersion] - [$($manifest.PowerShellVersion)]"
+    Write-Verbose "[$moduleName] - [PowerShellVersion] - [$($manifest.PowerShellVersion)]"
 
-    Write-Verbose "[$($task -join '] - [')] - [CompatiblePSEditions]"
+    Write-Verbose "[$moduleName] - [CompatiblePSEditions]"
     $capturedPSEdition = $capturedPSEdition | Sort-Object -Unique
     if ($capturedPSEdition.count -eq 2) {
         Write-Error 'The module is requires both Desktop and Core editions.'
         return 1
     }
     $manifest.CompatiblePSEditions = $capturedPSEdition.count -eq 0 ? @('Core', 'Desktop') : @($capturedPSEdition)
-    $manifest.CompatiblePSEditions | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [CompatiblePSEditions] - [$_]" }
+    $manifest.CompatiblePSEditions | ForEach-Object { Write-Verbose "[$moduleName] - [CompatiblePSEditions] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [PrivateData]"
+    Write-Verbose "[$moduleName] - [PrivateData]"
     $privateData = $manifest.Keys -contains 'PrivateData' ? $null -ne $manifest.PrivateData ? $manifest.PrivateData : @{} : @{}
     if ($manifest.Keys -contains 'PrivateData') {
         $manifest.Remove('PrivateData')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [HelpInfoURI]"
+    Write-Verbose "[$moduleName] - [HelpInfoURI]"
     $manifest.HelpInfoURI = $privateData.Keys -contains 'HelpInfoURI' ? $null -ne $privateData.HelpInfoURI ? $privateData.HelpInfoURI : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [HelpInfoURI] - [$($manifest.HelpInfoURI)]"
+    Write-Verbose "[$moduleName] - [HelpInfoURI] - [$($manifest.HelpInfoURI)]"
     if ([string]::IsNullOrEmpty($manifest.HelpInfoURI)) {
         $manifest.Remove('HelpInfoURI')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [DefaultCommandPrefix]"
+    Write-Verbose "[$moduleName] - [DefaultCommandPrefix]"
     $manifest.DefaultCommandPrefix = $privateData.Keys -contains 'DefaultCommandPrefix' ? $null -ne $privateData.DefaultCommandPrefix ? $privateData.DefaultCommandPrefix : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [DefaultCommandPrefix] - [$($manifest.DefaultCommandPrefix)]"
+    Write-Verbose "[$moduleName] - [DefaultCommandPrefix] - [$($manifest.DefaultCommandPrefix)]"
 
     $PSData = $privateData.Keys -contains 'PSData' ? $null -ne $privateData.PSData ? $privateData.PSData : @{} : @{}
 
-    Write-Verbose "[$($task -join '] - [')] - [Tags]"
+    Write-Verbose "[$moduleName] - [Tags]"
     $manifest.Tags = $PSData.Keys -contains 'Tags' ? $null -ne $PSData.Tags ? $PSData.Tags : @() : @()
     # Add tags for compatability mode. https://docs.microsoft.com/en-us/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest?view=powershell-7.1#compatibility-tags
     if ($manifest.CompatiblePSEditions -contains 'Desktop') {
@@ -231,61 +231,61 @@
             $manifest.Tags += 'PSEdition_Core'
         }
     }
-    $manifest.Tags | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [Tags] - [$_]" }
+    $manifest.Tags | ForEach-Object { Write-Verbose "[$moduleName] - [Tags] - [$_]" }
 
     if ($PSData.Tags -contains 'PSEdition_Core' -and $manifest.PowerShellVersion -lt '6.0') {
-        Write-Error "[$($task -join '] - [')] - [Tags] - Cannot be PSEdition = 'Core' and PowerShellVersion < 6.0"
+        Write-Error "[$moduleName] - [Tags] - Cannot be PSEdition = 'Core' and PowerShellVersion < 6.0"
         return 1
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [LicenseUri]"
+    Write-Verbose "[$moduleName] - [LicenseUri]"
     $manifest.LicenseUri = $PSData.Keys -contains 'LicenseUri' ? $null -ne $PSData.LicenseUri ? $PSData.LicenseUri : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [LicenseUri] - [$($manifest.LicenseUri)]"
+    Write-Verbose "[$moduleName] - [LicenseUri] - [$($manifest.LicenseUri)]"
     if ([string]::IsNullOrEmpty($manifest.LicenseUri)) {
         $manifest.Remove('LicenseUri')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [ProjectUri]"
+    Write-Verbose "[$moduleName] - [ProjectUri]"
     $manifest.ProjectUri = $PSData.Keys -contains 'ProjectUri' ? $null -ne $PSData.ProjectUri ? $PSData.ProjectUri : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [ProjectUri] - [$($manifest.ProjectUri)]"
+    Write-Verbose "[$moduleName] - [ProjectUri] - [$($manifest.ProjectUri)]"
     if ([string]::IsNullOrEmpty($manifest.ProjectUri)) {
         $manifest.Remove('ProjectUri')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [IconUri]"
+    Write-Verbose "[$moduleName] - [IconUri]"
     $manifest.IconUri = $PSData.Keys -contains 'IconUri' ? $null -ne $PSData.IconUri ? $PSData.IconUri : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [IconUri] - [$($manifest.IconUri)]"
+    Write-Verbose "[$moduleName] - [IconUri] - [$($manifest.IconUri)]"
     if ([string]::IsNullOrEmpty($manifest.IconUri)) {
         $manifest.Remove('IconUri')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [ReleaseNotes]"
+    Write-Verbose "[$moduleName] - [ReleaseNotes]"
     $manifest.ReleaseNotes = $PSData.Keys -contains 'ReleaseNotes' ? $null -ne $PSData.ReleaseNotes ? $PSData.ReleaseNotes : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [ReleaseNotes] - [$($manifest.ReleaseNotes)]"
+    Write-Verbose "[$moduleName] - [ReleaseNotes] - [$($manifest.ReleaseNotes)]"
     if ([string]::IsNullOrEmpty($manifest.ReleaseNotes)) {
         $manifest.Remove('ReleaseNotes')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [PreRelease]"
+    Write-Verbose "[$moduleName] - [PreRelease]"
     $manifest.PreRelease = $PSData.Keys -contains 'PreRelease' ? $null -ne $PSData.PreRelease ? $PSData.PreRelease : '' : ''
-    Write-Verbose "[$($task -join '] - [')] - [PreRelease] - [$($manifest.PreRelease)]"
+    Write-Verbose "[$moduleName] - [PreRelease] - [$($manifest.PreRelease)]"
     if ([string]::IsNullOrEmpty($manifest.PreRelease)) {
         $manifest.Remove('PreRelease')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [RequireLicenseAcceptance]"
+    Write-Verbose "[$moduleName] - [RequireLicenseAcceptance]"
     $manifest.RequireLicenseAcceptance = $PSData.Keys -contains 'RequireLicenseAcceptance' ? $null -ne $PSData.RequireLicenseAcceptance ? $PSData.RequireLicenseAcceptance : $false : $false
-    Write-Verbose "[$($task -join '] - [')] - [RequireLicenseAcceptance] - [$($manifest.RequireLicenseAcceptance)]"
+    Write-Verbose "[$moduleName] - [RequireLicenseAcceptance] - [$($manifest.RequireLicenseAcceptance)]"
     if ($manifest.RequireLicenseAcceptance -eq $false) {
         $manifest.Remove('RequireLicenseAcceptance')
     }
 
-    Write-Verbose "[$($task -join '] - [')] - [ExternalModuleDependencies]"
+    Write-Verbose "[$moduleName] - [ExternalModuleDependencies]"
     $manifest.ExternalModuleDependencies = $PSData.Keys -contains 'ExternalModuleDependencies' ? $null -ne $PSData.ExternalModuleDependencies ? $PSData.ExternalModuleDependencies : @() : @()
     if (($manifest.ExternalModuleDependencies).count -eq 0) {
         $manifest.Remove('ExternalModuleDependencies')
     } else {
-        $manifest.ExternalModuleDependencies | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ExternalModuleDependencies] - [$_]" }
+        $manifest.ExternalModuleDependencies | ForEach-Object { Write-Verbose "[$moduleName] - [ExternalModuleDependencies] - [$_]" }
     }
     <#
         PSEdition_Desktop: Packages that are compatible with Windows PowerShell

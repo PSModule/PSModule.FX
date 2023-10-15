@@ -13,6 +13,6 @@
 
     Write-Verbose "[$moduleName] - [$manifestPropertyName]"
     $aliasesToExport = ($manifest.AliasesToExport).count -eq 0 ? '*' : @($manifest.AliasesToExport)
-    $aliasesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [AliasesToExport] - [$_]" }
+    $aliasesToExport | ForEach-Object { Write-Verbose "[$moduleName] - [$manifestPropertyName] - [$_]" }
     $aliasesToExport
 }
