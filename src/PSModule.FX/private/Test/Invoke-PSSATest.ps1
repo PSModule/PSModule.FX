@@ -38,7 +38,8 @@
                 Enabled       = $true
             }
             Output     = @{
-                Verbosity = 'Detailed'
+                Verbosity           = 'Detailed'
+                StackTraceVerbosity = 'None'
             }
         }
         ErrorAction   = 'Stop'
