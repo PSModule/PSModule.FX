@@ -29,7 +29,7 @@
         Configuration = @{
             Run        = @{
                 Container = New-PesterContainer @containerParams
-                PassThru  = $true
+                PassThru  = $false
             }
             TestResult = @{
                 TestSuiteName = 'PSSA'
@@ -43,6 +43,7 @@
             }
         }
         ErrorAction   = 'Stop'
+        Verbose       = $false
     }
     Write-Verbose 'PesterParams:'
     Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 5)"
