@@ -78,14 +78,22 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
         $file | Remove-Item -Force
     }
 
-    $moduleFunctions = $($functionsToExport -join "','")
-    $moduleCmdlets = $($cmdletsToExport -join "','")
-    $moduleVariables = $($variablesToExport -join "','")
-    $moduleAlias = $($aliasesToExport -join "','")
+    $functionsToExport = Get-PSModuleFunctionsToExport -SourceFolderPath $SourceFolderPath
+    $functionsToExport = $($functionsToExport -join "','")
 
-    Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$moduleFunctions' -Cmdlet '$moduleCmdlets' -Variable '$moduleVariables' -Alias '$moduleAlias'"
+    $cmdletsToExport = Get-PSModuleCmdletsToExport -SourceFolderPath $SourceFolderPath
+    $cmdletsToExport = $($cmdletsToExport -join "','")
 
-    Write-Output "::group::[$moduleName] - Output - Root Module"
+    $variablesToExport = Get-PSModuleVariablesToExport -SourceFolderPath $SourceFolderPath
+    $variablesToExport = $($variablesToExport -join "','")
+
+    $aliasesToExport = Get-PSModuleAliasesToExport -SourceFolderPath $SourceFolderPath
+    $aliasesToExport = $($aliasesToExport -join "','")
+
+    Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
+    Write-Output '::endgroup::'
+
+    Write-Output "::group::[$moduleName] - Build root module - Result"
     Get-Content -Path $rootModuleFile
     Write-Output '::endgroup::'
 }

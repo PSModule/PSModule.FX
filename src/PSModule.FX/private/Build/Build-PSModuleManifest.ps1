@@ -13,26 +13,17 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Finding manifest file"
 
-    $manifestFileName = "$moduleName.psd1"
-    $manifestFilePath = Join-Path -Path $SourceFolderPath $manifestFileName
-    if (-not (Test-Path -Path $manifestFilePath)) {
-        Write-Error "[$manifestFileName] - 🟥 No manifest file found"
-        return 1
-    }
-    Write-Verbose "[$manifestFileName] - 🟩 Found manifest file"
-    Write-Output '::endgroup::'
+    $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo
+    $manifestFileName = $manifestFile.Name
+    $manifestFilePath = $manifestFile.FullName
+    Write-Output "::endgroup::"
 
-    Write-Output "::group::[$moduleName] - Create output manifest file"
-    Write-Verbose 'Creating new manifest file in outputs folder'
-    $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
-    Write-Verbose "OutputManifestPath - [$outputManifestPath]"
-    New-ModuleManifest -Path $outputManifestPath
+    Write-Output "::group::[$moduleName] - Build manifest file"
+    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As Hashtable
 
-    Write-Output "::group::[$moduleName] - Processing manifest file"
-    $manifest = Import-PowerShellDataFile $manifestFilePath
-
-    Set-PSModuleManifestRootModule -ManifestPath $outputManifestPath -SourceFolderPath $SourceFolderPath -RootModule $manifest.RootModule
-
+    $rootModule = Get-PSModuleRootModule -SourceFolderPath $SourceFolderPath
+    $rootModule = [string]::IsNullOrEmpty($manifest.RootModule) ? $rootModule : $manifest.RootModule
+    Update-ModuleManifest -Path $ManifestPath -RootModule $rootModule
 
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$($task -join '] - [')] - [Author] - [$($manifest.Author)]"
@@ -125,27 +116,10 @@
     $manifest.DscResourcesToExport = $dscResourcesToExport.count -eq 0 ? @() : @($dscResourcesToExport)
     $manifest.DscResourcesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport] - [$_]" }
 
-    Write-Verbose "[$($task -join '] - [')] - [FunctionsToExport]"
-    $publicFolderPath = Join-Path $moduleFolder 'public'
-    $functionsToExport = Get-ChildItem -Path $publicFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.ps1' | ForEach-Object {
-        $fileContent = Get-Content -Path $_.FullName -Raw
-        $containsFunction = ($fileContent -match 'function ') -or ($fileContent -match 'filter ')
-        Write-Verbose "[$($task -join '] - [')] - [FunctionsToExport] - [$($_.BaseName)] - [$containsFunction]"
-        $containsFunction ? $_.BaseName : $null
-    }
-    $manifest.FunctionsToExport = $functionsToExport.count -eq 0 ? @() : @($functionsToExport)
-
-    Write-Verbose "[$($task -join '] - [')] - [CmdletsToExport]"
-    $manifest.CmdletsToExport = ($manifest.CmdletsToExport).count -eq 0 ? @() : @($manifest.CmdletsToExport)
-    $manifest.CmdletsToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [CmdletsToExport] - [$_]" }
-
-    Write-Verbose "[$($task -join '] - [')] - [VariablesToExport]"
-    $manifest.VariablesToExport = ($manifest.VariablesToExport).count -eq 0 ? @() : @($manifest.VariablesToExport)
-    $manifest.VariablesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [VariablesToExport] - [$_]" }
-
-    Write-Verbose "[$($task -join '] - [')] - [AliasesToExport]"
-    $manifest.AliasesToExport = ($manifest.AliasesToExport).count -eq 0 ? '*' : @($manifest.AliasesToExport)
-    $manifest.AliasesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [AliasesToExport] - [$_]" }
+    $manifest.FunctionsToExport = Get-PSModuleFunctionToExport -SourceFolderPath $SourceFolderPath
+    $manifest.CmdletsToExport = Get-PSModuleCmdletsToExport -SourceFolderPath $SourceFolderPath
+    $manifest.AliasesToExport = Get-PSModuleAliasesToExport -SourceFolderPath $SourceFolderPath
+    $manifest.VariablesToExport = Get-PSModuleVariablesToExport -SourceFolderPath $SourceFolderPath
 
     Write-Verbose "[$($task -join '] - [')] - [ModuleList]"
     $moduleList = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' -Exclude "$moduleName.psm1" |
@@ -154,7 +128,7 @@
     $manifest.ModuleList = $moduleList.count -eq 0 ? @() : @($moduleList)
     $manifest.ModuleList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ModuleList] - [$_]" }
 
-    Write-Output "::group::[$($task -join '] - [')] - Gather dependencies from files"
+    Write-Verbose "[$($task -join '] - [')] - Gather dependencies from files"
 
     $capturedModules = @()
     $capturedVersions = @()
@@ -315,8 +289,6 @@
     } else {
         $manifest.ExternalModuleDependencies | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ExternalModuleDependencies] - [$_]" }
     }
-    Write-Output "::group::[$($task -join '] - [')] - Done"
-    $task.RemoveAt($task.Count - 1)
     <#
         PSEdition_Desktop: Packages that are compatible with Windows PowerShell
         PSEdition_Core: Packages that are compatible with PowerShell 6 and higher
@@ -327,8 +299,14 @@
     #>
 
 
+    Write-Output "::group::[$moduleName] - Create output manifest file"
+    Write-Verbose 'Creating new manifest file in outputs folder'
+    $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
+    Write-Verbose "OutputManifestPath - [$outputManifestPath]"
+    New-ModuleManifest -Path $outputManifestPath @manifest
+    Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Output - Manifest"
+    Write-Output "::group::[$moduleName] - Manifest - Result"
     Get-Content -Path $outputManifestPath
     Write-Output '::endgroup::'
 
