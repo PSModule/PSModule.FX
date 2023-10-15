@@ -114,7 +114,7 @@
     $manifest.DscResourcesToExport = $dscResourcesToExport.count -eq 0 ? @() : @($dscResourcesToExport)
     $manifest.DscResourcesToExport | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport] - [$_]" }
 
-    $manifest.FunctionsToExport = Get-PSModuleFunctionToExport -SourceFolderPath $SourceFolderPath
+    $manifest.FunctionsToExport = Get-PSModuleFunctionsToExport -SourceFolderPath $SourceFolderPath
     $manifest.CmdletsToExport = Get-PSModuleCmdletsToExport -SourceFolderPath $SourceFolderPath
     $manifest.AliasesToExport = Get-PSModuleAliasesToExport -SourceFolderPath $SourceFolderPath
     $manifest.VariablesToExport = Get-PSModuleVariablesToExport -SourceFolderPath $SourceFolderPath
