@@ -13,7 +13,7 @@
     $moduleFolder = Get-Item -Path $ModuleFolderPath
 
     Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
-    Invoke-ScriptAnalyzer -Path $moduleFolder -Recurse -Verbose
+    Invoke-Pester -Path .\PSSA.Tests.ps1 -Script @{ ModulePath = $moduleFolder.FullName }
     Write-Output "::endgroup::"
 
     Write-Verbose "[$moduleName] - Done"
