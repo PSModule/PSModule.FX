@@ -18,14 +18,14 @@ foreach ($Severity in $Severities) {
 
     Describe "Testing PSSA $Severity Rules" -Tag $Severity {
 
-        It '<RuleName>' -ForEach ($Rules | Where-Object Severity -EQ $Severity) {
+        It '<CommonName> (<RuleName>)' -ForEach ($Rules | Where-Object Severity -EQ $Severity) {
 
             param ($RuleName)
 
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
             Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse |
                 ForEach-Object {
-                    "Problem in $($_.ScriptName) at line $($_.Line) with message: $($_.Message)"
+                    "$($_.ScriptName):L$($_.Line): $($_.Message)"
                 } | Should -BeNullOrEmpty
         }
     }
