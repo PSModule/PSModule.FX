@@ -20,7 +20,7 @@
     Import-Module $moduleName
 
     Write-Verbose "[$moduleName] - List loaded modules"
-    $availableModules = Get-Module -Refresh -Verbose:$false
+    $availableModules = Get-Module -ListAvailable -Refresh -Verbose:$false
     $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
 
     if ($moduleName -notin $availableModules.Name) {
