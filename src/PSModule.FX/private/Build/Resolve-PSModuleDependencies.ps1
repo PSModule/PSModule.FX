@@ -55,5 +55,5 @@
         $VerbosePreference = $VerbosePreferenceOriginal
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Done"
     }
-    Write-Verbose "[$moduleName] - Done"
+    Write-Verbose "[$moduleName] - Resolving dependencies - Done"
 }
