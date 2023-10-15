@@ -28,7 +28,8 @@ foreach ($Severity in $Severities) {
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
             Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse |
                 ForEach-Object {
-                    "$($_.ScriptName):L$($_.Line): $($_.Message)$([System.Environment]::NewLine)"
+                    Write-Error "[PSSA $Severity] $($_.ScriptName):L$($_.Line): $($_.Message)"
+                    "[$($_.ScriptName):L$($_.Line)] $($_.Message)"
                 } | Should -BeNullOrEmpty
         }
     }
