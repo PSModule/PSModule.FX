@@ -26,11 +26,9 @@ foreach ($Severity in $Severities) {
         It '<CommonName> (<RuleName>)' -ForEach ($Rules | Where-Object Severity -EQ $Severity) {
             param ($RuleName)
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
-            $rulesNotMet = Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse
-            $rulesNotMet.count | Should -BeExactly 0
-            $rulesNotMet | ForEach-Object {
-                    Write-Host "[PSSA $Severity] $($_.ScriptName):L$($_.Line): $($_.Message)"
-                }
+            Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse | ForEach-Object {
+                    "$($_.ScriptName):L$($_.Line): $($_.Message)"
+                } | Should -BeNullOrEmpty
         }
     }
 }
