@@ -78,18 +78,14 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
         $file | Remove-Item -Force
     }
 
-    $moduleFunctions = $($manifest.FunctionsToExport -join "','")
-    $moduleCmdlets = $($manifest.CmdletsToExport -join "','")
-    $moduleVariables = $($manifest.VariablesToExport -join "','")
-    $moduleAlias = $($manifest.AliasesToExport -join "','")
+    $moduleFunctions = $($functionsToExport -join "','")
+    $moduleCmdlets = $($cmdletsToExport -join "','")
+    $moduleVariables = $($variablesToExport -join "','")
+    $moduleAlias = $($aliasesToExport -join "','")
 
     Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$moduleFunctions' -Cmdlet '$moduleCmdlets' -Variable '$moduleVariables' -Alias '$moduleAlias'"
 
-    Write-Output "::group::[$($task -join '] - [')] - Root Module"
+    Write-Output "::group::[$moduleName] - Output - Root Module"
     Get-Content -Path $rootModuleFile
-    Write-Output '::endgroup::'
-
-    Write-Output "::group::[$moduleName] - Output - RootModule"
-    Get-Content -Path $outputManifestPath
     Write-Output '::endgroup::'
 }
