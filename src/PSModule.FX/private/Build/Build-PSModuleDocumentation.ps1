@@ -16,13 +16,12 @@
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo -Verbose:$false
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
 
-    Write-Verbose "[$moduleName] - List loaded modules"
-    $availableModules = Get-Module -Verbose:$false
-    $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
-
     Write-Verbose "[$moduleName] - Importing module"
     Import-Module $moduleName
 
+    Write-Verbose "[$moduleName] - List loaded modules"
+    $availableModules = Get-Module -Verbose:$false
+    $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
 
     if ($moduleName -notin $availableModules) {
         throw "[$moduleName] - Module not found"
