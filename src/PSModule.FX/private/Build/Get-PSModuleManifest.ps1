@@ -21,10 +21,10 @@
 
     $manifestFilePath = Join-Path -Path $SourceFolderPath $manifestFileName
     if (-not (Test-Path -Path $manifestFilePath)) {
-        Write-Warning "[$manifestFileName] - 🟥 No manifest file found"
+        Write-Warning "[$moduleName] - [$manifestPropertyName] - 🟥 No manifest file found"
         return $null
     }
-    Write-Verbose "[$manifestFileName] - 🟩 Found manifest file"
+    Write-Verbose "[$moduleName] - [$manifestPropertyName] - 🟩 Found manifest file"
 
     switch ($As) {
         'FileName' {

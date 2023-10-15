@@ -9,13 +9,12 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     $manifestPropertyName = 'RootModule'
 
-    if (-not $RootModule) {
-        $moduleFileName = $(Get-ChildItem -Path $SourceFolderPath -File | Where-Object { $_.BaseName -like $_.Directory.BaseName -and ($_.Extension -in '.psm1', '.ps1', '.dll', '.cdxml', '.xaml') } | Select-Object -First 1 -ExpandProperty Name )
-        if ($moduleFileName) {
-            $RootModule = $moduleFileName
-        } else {
-            Write-Verbose "[$moduleName] - [$manifestPropertyName] - No RootModule found"
-        }
+    Write-Verbose "[$moduleName] - [$manifestPropertyName] - Find root module"
+    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath
+
+    $rootModule = $(Get-ChildItem -Path $SourceFolderPath -File | Where-Object { $_.BaseName -like $_.Directory.BaseName -and ($_.Extension -in '.psm1', '.ps1', '.dll', '.cdxml', '.xaml') } | Select-Object -First 1 -ExpandProperty Name )
+    if (-not $rootModule) {
+        Write-Verbose "[$moduleName] - [$manifestPropertyName] - No RootModule found"
     }
 
     Write-Verbose "[$moduleName] - [$manifestPropertyName] - [$RootModule]"
@@ -34,5 +33,6 @@
         Write-Warning "[$moduleName] - [$manifestPropertyName] - [$moduleType] - Module type not supported"
     }
 
-    $RootModule
+    $rootModule = [string]::IsNullOrEmpty($manifest.RootModule) ? $rootModule : @($manifest.RootModule)
+    $rootModule
 }

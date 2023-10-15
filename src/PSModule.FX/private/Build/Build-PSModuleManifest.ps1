@@ -21,9 +21,7 @@
     Write-Output "::group::[$moduleName] - Build manifest file"
     $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As Hashtable
 
-    $rootModule = Get-PSModuleRootModule -SourceFolderPath $SourceFolderPath
-    $rootModule = [string]::IsNullOrEmpty($manifest.RootModule) ? $rootModule : $manifest.RootModule
-    Update-ModuleManifest -Path $ManifestPath -RootModule $rootModule
+    $manifest.RootModule = Get-PSModuleRootModule -SourceFolderPath $SourceFolderPath
 
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$($task -join '] - [')] - [Author] - [$($manifest.Author)]"
