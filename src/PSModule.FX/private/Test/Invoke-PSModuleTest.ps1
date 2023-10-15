@@ -2,7 +2,7 @@
     param(
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
-        [string] $ModuleFolder
+        [string] $ModuleFolderPath
     )
 
     $moduleName = Split-Path -Path $ModulesFolder -Leaf
