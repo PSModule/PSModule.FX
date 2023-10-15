@@ -27,10 +27,10 @@ foreach ($Severity in $Severities) {
             param ($RuleName)
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
             $rulesNotMet = Invoke-ScriptAnalyzer -Path $Path -IncludeRule $RuleName -Recurse
+            $rulesNotMet.count | Should -BeExactly 0
             $rulesNotMet | ForEach-Object {
                     Write-Host "[PSSA $Severity] $($_.ScriptName):L$($_.Line): $($_.Message)"
                 }
-            $rulesNotMet.count | Should -BeExactly 0
         }
     }
 }
