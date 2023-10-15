@@ -16,7 +16,7 @@
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo
     $manifestFileName = $manifestFile.Name
     $manifestFilePath = $manifestFile.FullName
-    Write-Output "::endgroup::"
+    Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build manifest file"
     $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As Hashtable
@@ -138,42 +138,39 @@
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
         Write-Verbose "[$moduleName] - Processing [$relativePath]"
 
-        if ($moduleType -eq 'Script') {
-            if ($file.extension -in '.psm1', '.ps1') {
-                $fileContent = Get-Content -Path $file
+        if ($file.extension -in '.psm1', '.ps1') {
+            $fileContent = Get-Content -Path $file
 
-                switch -Regex ($fileContent) {
-                    # RequiredModules -> REQUIRES -Modules <Module-Name> | <Hashtable>, @() if not provided
-                    '^#Requires -Modules (.+)$' {
-                        # Add captured module name to array
-                        $capturedMatches = $matches[1].Split(',').trim()
-                        $capturedMatches | ForEach-Object {
-                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_]"
-                            $hashtable = '\@\s*\{[^\}]*\}'
-                            if ($_ -match $hashtable) {
-                                $modules = Invoke-Expression $_ -ErrorAction SilentlyContinue
-                                $capturedModules += $modules
-                            } else {
-                                $capturedModules += $_
-                            }
+            switch -Regex ($fileContent) {
+                # RequiredModules -> REQUIRES -Modules <Module-Name> | <Hashtable>, @() if not provided
+                '^#Requires -Modules (.+)$' {
+                    # Add captured module name to array
+                    $capturedMatches = $matches[1].Split(',').trim()
+                    $capturedMatches | ForEach-Object {
+                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_]"
+                        $hashtable = '\@\s*\{[^\}]*\}'
+                        if ($_ -match $hashtable) {
+                            $modules = Invoke-Expression $_ -ErrorAction SilentlyContinue
+                            $capturedModules += $modules
+                        } else {
+                            $capturedModules += $_
                         }
                     }
-                    # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
-                    '^#Requires -Version (.+)$' {
-                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Version] - [$($matches[1])]"
-                        # Add captured module name to array
-                        $capturedVersions += $matches[1]
-                    }
-                    #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
-                    '^#Requires -PSEdition (.+)$' {
-                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -PSEdition] - [$($matches[1])]"
-                        # Add captured module name to array
-                        $capturedPSEdition += $matches[1]
-                    }
+                }
+                # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
+                '^#Requires -Version (.+)$' {
+                    Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Version] - [$($matches[1])]"
+                    # Add captured module name to array
+                    $capturedVersions += $matches[1]
+                }
+                #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
+                '^#Requires -PSEdition (.+)$' {
+                    Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -PSEdition] - [$($matches[1])]"
+                    # Add captured module name to array
+                    $capturedPSEdition += $matches[1]
                 }
             }
         }
-        $task.RemoveAt($task.Count - 1)
     }
 
     Write-Verbose "[$moduleName] - [RequiredModules]"

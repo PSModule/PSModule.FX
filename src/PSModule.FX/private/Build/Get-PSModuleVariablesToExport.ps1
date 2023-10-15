@@ -9,7 +9,7 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     $manifestPropertyName = 'VariablesToExport'
 
-    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath
+    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -Verbose:$false
 
     Write-Verbose "[$moduleName] - [$manifestPropertyName]"
     $variablesToExport = ($manifest.VariablesToExport).count -eq 0 ? @() : @($manifest.VariablesToExport)

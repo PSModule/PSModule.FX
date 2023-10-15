@@ -9,7 +9,7 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     $manifestPropertyName = 'CmdletsToExport'
 
-    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath
+    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -Verbose:$false
 
     Write-Verbose "[$moduleName] - [$manifestPropertyName]"
     $cmdletsToExport = ($manifest.CmdletsToExport).count -eq 0 ? @() : @($manifest.CmdletsToExport)
