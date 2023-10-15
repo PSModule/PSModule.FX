@@ -11,33 +11,41 @@
     $pesterModule = $modules | Where-Object Name -EQ Pester | Sort-Object Version -Descending | Select-Object -First 1
 
     Write-Verbose 'Testing with:'
-    Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())" -Verbose
-    Write-Verbose "   Pester           $($pesterModule.version)" -Verbose
-    Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)" -Verbose
+    Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
+    Write-Verbose "   Pester           $($pesterModule.version)"
+    Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)"
 
     $containerParams = @{
-        Path = (Join-Path $repoRootPath $moduleTestFilePath)
+        Path = (Join-Path $PSScriptRoot 'tests' 'PSSA.Tests.ps1')
         Data = @{
-            Path = $moduleFolder.FullName
+            Path = $ModuleFolder.FullName
         }
     }
-    $container = New-PesterContainer @containerParams
+    Write-Verbose 'ContainerParams:'
+    Write-Verbose "$($containerParams | Out-String)"
 
-    
 
-    Invoke-Pester -Configuration @{
-        Run        = @{
-            Container = $container
-            PassThru  = $true
+    $pesterParams = @{
+        Configuration = @{
+            Run        = @{
+                Container = New-PesterContainer @containerParams
+                PassThru  = $true
+            }
+            TestResult = @{
+                TestSuiteName = 'PSSA'
+                OutputPath    = '.\outputs\PSSA.Results.xml'
+                OutputFormat  = 'NUnitXml'
+                Enabled       = $true
+            }
+            Output     = @{
+                Verbosity = 'Detailed'
+            }
         }
-        TestResult = @{
-            TestSuiteName = 'PSSA'
-            OutputPath    = 'C:\Repos\GitHub\PSModule\Demo\outputs\PSSA.Results.xml'
-            OutputFormat  = 'NUnitXml'
-            Enabled       = $true
-        }
-        Output     = @{
-            Verbosity = 'Detailed'
-        }
-    } -ErrorAction 'Stop'
+        ErrorAction   = 'Stop'
+    }
+    Write-Verbose 'PesterParams:'
+    Write-Verbose "$($pesterParams | Out-String)"
+
+    Invoke-Pester @pesterParams
+
 }
