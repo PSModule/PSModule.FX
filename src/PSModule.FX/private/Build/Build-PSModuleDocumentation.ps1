@@ -17,9 +17,14 @@
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
 
     Write-Verbose "[$moduleName] - Importing module"
-    $env:PSModulePath += ";$SourceFolderPath"
+    if ($IsWindows) {
+        $PSModulePathSeparator = ';'
+    } else {
+        $PSModulePathSeparator = ':'
+    }
     Write-Verbose "[$moduleName] - PSModulePath"
-    $env:PSModulePath.Split(';') | ForEach-Object {
+    $env:PSModulePath += "$PSModulePathSeparator$SourceFolderPath"
+    $env:PSModulePath.Split($PSModulePathSeparator) | ForEach-Object {
         Write-Verbose "[$moduleName] - PSModulePath - [$_]"
     }
     Import-Module $moduleName
