@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build manifest file"
+    Write-Verbose "::group::[$moduleName] - Build manifest file"
     Write-Verbose "[$moduleName] - Finding manifest file"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo
@@ -295,8 +295,8 @@
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Result"
+    Write-Verbose "::group::[$moduleName] - Build manifest file - Result"
     Get-Content -Path $outputManifestPath
-    Write-Output '::endgroup::'
+    Write-Verbose '::endgroup::'
 
 }

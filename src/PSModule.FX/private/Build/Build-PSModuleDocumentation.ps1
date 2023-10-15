@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build documentation"
+    Write-Verbose "::group::[$moduleName] - Build documentation"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo -Verbose:$false
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
@@ -28,11 +28,11 @@
     }
 
     New-MarkdownHelp -Module $moduleName -OutputFolder $OutputFolderPath -Force -Verbose
-    Write-Output '::endgroup::'
+    Write-Verbose '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build documentation - Result"
+    Write-Verbose "::group::[$moduleName] - Build documentation - Result"
     Get-ChildItem -Path $OutputFolderPath -Recurse -Force -Include '*.md' | ForEach-Object {
-        Write-Output "::debug::[$moduleName] - [$_] - [$(Get-FileHash -Path $_.FullName -Algorithm SHA256)]"
+        Write-Verbose "::debug::[$moduleName] - [$_] - [$(Get-FileHash -Path $_.FullName -Algorithm SHA256)]"
     }
-    Write-Output '::endgroup::'
+    Write-Verbose '::endgroup::'
 }

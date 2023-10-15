@@ -31,7 +31,7 @@ function Build-PSModule {
 
     $functionName = $PSCmdlet.MyInvocation.MyCommand.Name
 
-    Write-Output "::group::Starting..."
+    Write-Verbose "::group::Starting..."
 
     $moduleFolders = Get-PSModuleFolders -Path $Path
     Write-Verbose "Found $($moduleFolders.Count) module(s)"

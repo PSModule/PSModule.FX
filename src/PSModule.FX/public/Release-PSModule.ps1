@@ -9,7 +9,7 @@ function Release-PSModule {
     $task = New-Object System.Collections.Generic.List[string]
     #region Publish-Module
     $task.Add('Release-Module')
-    Write-Output "::group::[$($task -join '] - [')] - Starting..."
+    Write-Verbose "::group::[$($task -join '] - [')] - Starting..."
 
     Import-Module PackageManagement, PowerShellGet -Verbose:$false -ErrorAction Stop
 
@@ -27,11 +27,11 @@ function Release-PSModule {
         $moduleName = $module.Name
         $manifestFilePath = "$module\$moduleName.psd1"
         $task.Add($moduleName)
-        Write-Output "::group::[$($task -join '] - [')] - Starting..."
+        Write-Verbose "::group::[$($task -join '] - [')] - Starting..."
 
         #region Generate-Version
         $task.Add('Generate-Version')
-        Write-Output "::group::[$($task -join '] - [')]"
+        Write-Verbose "::group::[$($task -join '] - [')]"
         Write-Verbose "[$($task -join '] - [')] - Generate version"
 
         [Version]$newVersion = '0.0.0'
@@ -83,27 +83,27 @@ function Release-PSModule {
         Write-Verbose "[$($task -join '] - [')] - Bump module version -> module metadata: Update-ModuleMetadata"
         Update-ModuleManifest -Path $manifestFilePath -ModuleVersion $newVersion -ErrorAction Continue
 
-        Write-Output "::group::[$($task -join '] - [')] - Done"
+        Write-Verbose "::group::[$($task -join '] - [')] - Done"
         $task.RemoveAt($task.Count - 1)
         #endregion Generate-Version
 
         #region Publish-Docs
         $task.Add('Publish-Docs')
-        Write-Output "::group::[$($task -join '] - [')]"
-        Write-Output "::group::[$($task -join '] - [')] - Do something"
+        Write-Verbose "::group::[$($task -join '] - [')]"
+        Write-Verbose "::group::[$($task -join '] - [')] - Do something"
 
         Write-Verbose "[$($task -join '] - [')] - Publish docs to GitHub Pages"
         Write-Verbose "[$($task -join '] - [')] - Update docs path: Update-ModuleMetadata"
         # What about updateable help? https://learn.microsoft.com/en-us/powershell/scripting/developer/help/supporting-updatable-help?view=powershell-7.3
 
-        Write-Output "::group::[$($task -join '] - [')] - Done"
+        Write-Verbose "::group::[$($task -join '] - [')] - Done"
         $task.RemoveAt($task.Count - 1)
         #endregion Publish-Docs
 
         #region Publish-ToPSGallery
         $task.Add('Publish-ToPSGallery')
-        Write-Output "::group::[$($task -join '] - [')]"
-        Write-Output "::group::[$($task -join '] - [')] - Do something"
+        Write-Verbose "::group::[$($task -join '] - [')]"
+        Write-Verbose "::group::[$($task -join '] - [')] - Do something"
 
         Write-Verbose "[$($task -join '] - [')] - Publish module to PowerShell Gallery using [$APIKey]"
         Publish-Module -Path "$module" -NuGetApiKey $APIKey
@@ -112,15 +112,15 @@ function Release-PSModule {
         gh release edit $newVersion --draft=false
 
         Write-Verbose "[$($task -join '] - [')] - Doing something"
-        Write-Output "::group::[$($task -join '] - [')] - Done"
+        Write-Verbose "::group::[$($task -join '] - [')] - Done"
         $task.RemoveAt($task.Count - 1)
         #endregion Publish-ToPSGallery
 
     }
 
     $task.RemoveAt($task.Count - 1)
-    Write-Output "::group::[$($task -join '] - [')] - Stopping..."
-    Write-Output '::endgroup::'
+    Write-Verbose "::group::[$($task -join '] - [')] - Stopping..."
+    Write-Verbose '::endgroup::'
     #endregion Publish-Module
 
 }

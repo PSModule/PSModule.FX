@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build root module"
+    Write-Verbose "::group::[$moduleName] - Build root module"
 
     # RE-create the moduleName.psm1 file
     # concat all the files, and add Export-ModuleMembers at the end with modules.
@@ -91,9 +91,9 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     $aliasesToExport = $($aliasesToExport -join "','")
 
     Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
-    Write-Output '::endgroup::'
+    Write-Verbose '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build root module - Result"
+    Write-Verbose "::group::[$moduleName] - Build root module - Result"
     Get-Content -Path $rootModuleFile
-    Write-Output '::endgroup::'
+    Write-Verbose '::endgroup::'
 }
