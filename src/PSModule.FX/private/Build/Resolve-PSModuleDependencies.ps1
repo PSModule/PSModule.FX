@@ -45,6 +45,8 @@
 
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Installing module"
         Install-Module @installParams
+        Write-Verbose "[$moduleName] - [$($installParams.Name)] - Importing module"
+        Import-Module @installParams
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Done"
     }
     Write-Verbose "[$moduleName] - Done"
