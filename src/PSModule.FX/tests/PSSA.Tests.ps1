@@ -1,6 +1,6 @@
 ﻿[CmdLetBinding()]
 Param(
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory)]
     [string] $Path
 )
 
