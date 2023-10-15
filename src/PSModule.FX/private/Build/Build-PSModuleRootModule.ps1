@@ -13,10 +13,6 @@
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
     Write-Output "::group::[$moduleName] - Build root module"
 
-    $task.Add('Compress')
-    Write-Output "::group::[$($task -join '] - [')]"
-    Write-Verbose "[$($task -join '] - [')] - Processing"
-
     # RE-create the moduleName.psm1 file
     # concat all the files, and add Export-ModuleMembers at the end with modules.
     $rootModuleFile = New-Item -Path $OutputFolderPath -Name "$moduleName.psm1" -Force
@@ -29,7 +25,6 @@
     # 5. Public
     # 6  *.ps1 on module root
     # 7. Export-ModuleMember
-
 
     Add-Content -Path $rootModuleFile.FullName -Value @'
 [Cmdletbinding()]
@@ -60,15 +55,14 @@ Write-Verbose "[$scriptName] - [data] - Done"
     )
 
 
-    $subFolders = Get-ChildItem -Path $moduleOutputFolderPath -Directory -Force | Where-Object -Property Name -In $folderProcessingOrder
+    $subFolders = Get-ChildItem -Path $SourceFolderPath -Directory -Force | Where-Object -Property Name -In $folderProcessingOrder
     foreach ($subFolder in $subFolders) {
-        Add-ContentFromItem -Path $subFolder.FullName -RootModuleFilePath $rootModuleFile.FullName -RootPath $moduleOutputFolderPath
-        $subFolder | Remove-Item -Recurse -Force
+        Add-ContentFromItem -Path $subFolder.FullName -RootModuleFilePath $rootModuleFile.FullName -RootPath $SourceFolderPath
     }
 
-    $files = $moduleOutputFolderPath | Get-ChildItem -File -Force -Filter '*.ps1'
+    $files = $SourceFolderPath | Get-ChildItem -File -Force -Filter '*.ps1'
     foreach ($file in $files) {
-        $relativePath = $file.FullName.Replace($moduleOutputFolderPath, '').TrimStart($pathSeparator)
+        $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
         Add-Content -Path $rootModuleFile.FullName -Value @"
 #region - From $relativePath
 Write-Verbose "[`$scriptName] - [$relativePath] - Importing"
@@ -94,7 +88,6 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     Write-Output "::group::[$($task -join '] - [')] - Root Module"
     Get-Content -Path $rootModuleFile
     Write-Output '::endgroup::'
-
 
     Write-Output "::group::[$moduleName] - Output - RootModule"
     Get-Content -Path $outputManifestPath
