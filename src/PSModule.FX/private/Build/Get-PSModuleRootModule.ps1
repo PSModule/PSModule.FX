@@ -10,7 +10,7 @@
     $manifestPropertyName = 'RootModule'
 
     Write-Verbose "[$moduleName] - [$manifestPropertyName] - Find root module"
-    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath
+    $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -Verbose:$false
 
     $rootModule = $(Get-ChildItem -Path $SourceFolderPath -File | Where-Object { $_.BaseName -like $_.Directory.BaseName -and ($_.Extension -in '.psm1', '.ps1', '.dll', '.cdxml', '.xaml') } | Select-Object -First 1 -ExpandProperty Name )
     if (-not $rootModule) {

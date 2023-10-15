@@ -11,18 +11,15 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Finding manifest file"
+    Write-Output "::group::[$moduleName] - Build manifest file"
+    Write-Verbose "[$moduleName] - Finding manifest file"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo
     $manifestFileName = $manifestFile.Name
-    $manifestFilePath = $manifestFile.FullName
-    Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file"
     $manifest = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As Hashtable
 
     $manifest.RootModule = Get-PSModuleRootModule -SourceFolderPath $SourceFolderPath
-
     $manifest.Author = $manifest.Keys -contains 'Author' ? -not [string]::IsNullOrEmpty($manifest.Author) ? $manifest.Author : $env:GITHUB_REPOSITORY_OWNER : $env:GITHUB_REPOSITORY_OWNER
     Write-Verbose "[$moduleName] - [Author] - [$($manifest.Author)]"
 
@@ -293,15 +290,12 @@
         https://learn.microsoft.com/en-us/powershell/gallery/concepts/package-manifest-affecting-ui?view=powershellget-2.x#tag-details
     #>
 
-
-    Write-Output "::group::[$moduleName] - Create output manifest file"
     Write-Verbose 'Creating new manifest file in outputs folder'
     $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
-    Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Manifest - Result"
+    Write-Output "::group::[$moduleName] - Build manifest file - Result"
     Get-Content -Path $outputManifestPath
     Write-Output '::endgroup::'
 
