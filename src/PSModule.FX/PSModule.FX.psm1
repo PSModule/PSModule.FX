@@ -16,7 +16,7 @@ Write-Verbose "[$scriptName] - [data] - Done"
 #endregion - Importing data files
 
 #region - Importing script files
-$folders = 'init', 'classes', 'private', 'public'
+$folders = 'init', 'private', 'public'
 foreach ($folder in $folders) {
     Write-Verbose "[$scriptName] - [$folder] - Processing folder"
     $folderPath = Join-Path $PSScriptRoot $folder
