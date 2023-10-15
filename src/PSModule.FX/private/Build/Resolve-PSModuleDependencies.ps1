@@ -51,7 +51,7 @@
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Importing module"
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
-        Import-Module @installParams -WarningAction SilentlyContinue
+        Import-Module @installParams
         $VerbosePreference = $VerbosePreferenceOriginal
         Write-Verbose "[$moduleName] - [$($installParams.Name)] - Done"
     }
