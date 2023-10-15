@@ -14,7 +14,7 @@
     Write-Output "::group::[$moduleName] - Build documentation"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -Verbose:$false
-    Resolve-PSModuleDependencies -Path $manifestFile
+    Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
 
     Write-Verbose "Importing module"
     Import-Module $moduleOutputFolderPath

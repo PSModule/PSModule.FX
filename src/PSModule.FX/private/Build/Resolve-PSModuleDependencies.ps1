@@ -21,11 +21,13 @@
         [Parameter(Mandatory)]
         [string] $ManifestFilePath
     )
-    $action = $MyInvocation.MyCommand.Name
 
+    Write-Verbose "[$moduleName] - Resolving dependencies"
+
+    $moduleName = $ManifestFilePath | Get-Item | Select-Object -ExpandProperty BaseName
     $manifest = Import-PowerShellDataFile -Path $ManifestFilePath
-    Write-Verbose "[$action] - Reading [$ManifestFilePath]"
-    Write-Verbose "[$action] - Found [$($manifest.RequiredModules.Count)] modules to install"
+    Write-Verbose "[$moduleName] - Reading [$ManifestFilePath]"
+    Write-Verbose "[$moduleName] - Found [$($manifest.RequiredModules.Count)] modules to install"
 
     foreach ($requiredModule in $manifest.RequiredModules) {
         $installParams = @{}
@@ -41,9 +43,9 @@
         $installParams.Verbose = $false
         $installParams.Force = $true
 
-        Write-Verbose "[$action] - [$($installParams.Name)] - Installing module"
+        Write-Verbose "[$moduleName] - [$($installParams.Name)] - Installing module"
         Install-Module @installParams
-        Write-Verbose "[$action] - [$($installParams.Name)] - Done"
+        Write-Verbose "[$moduleName] - [$($installParams.Name)] - Done"
     }
-    Write-Verbose "[$action] - Done"
+    Write-Verbose "[$moduleName] - Done"
 }
