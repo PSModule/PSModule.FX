@@ -18,7 +18,7 @@
     $containerParams = @{
         Path = (Join-Path $PSScriptRoot 'tests' 'PSSA.Tests.ps1')
         Data = @{
-            Path = $ModuleFolder.FullName
+            Path = $ModuleFolder
         }
     }
     Write-Verbose 'ContainerParams:'
