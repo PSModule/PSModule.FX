@@ -5,7 +5,7 @@ Param(
 )
 
 # Get all PSScript Analyzer Rules and save them in an array
-$rules = Get-ScriptAnalyzerRule
+$rules = Get-ScriptAnalyzerRule | ConvertTo-Json -Depth 1 | ConvertFrom-Json -AsHashtable
 
 # Create an array of the types of rules
 $Severities = @('Information', 'Warning', 'Error')
