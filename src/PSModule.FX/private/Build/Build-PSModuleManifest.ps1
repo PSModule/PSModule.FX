@@ -57,15 +57,15 @@
     $pathSeparator = [System.IO.Path]::DirectorySeparatorChar
 
     Write-Verbose "[$($task -join '] - [')] - [FileList]"
-    $files = $moduleFolder | Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object -Property Name -NotLike '*.ps1'
-    $files += $moduleFolder | Get-ChildItem -Directory | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
+    $files = $SourceFolderPath | Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object -Property Name -NotLike '*.ps1'
+    $files += $SourceFolderPath | Get-ChildItem -Directory | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
     $files = $files | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $fileList = $files | Where-Object { $_ -notLike 'public*' -and $_ -notLike 'private*' -and $_ -notLike 'classes*' }
     $manifest.FileList = $fileList.count -eq 0 ? @() : @($fileList)
     $manifest.FileList | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FileList] - [$_]" }
 
     Write-Verbose "[$($task -join '] - [')] - [RequiredAssemblies]"
-    $requiredAssembliesFolderPath = Join-Path $moduleFolder 'assemblies'
+    $requiredAssembliesFolderPath = Join-Path $SourceFolderPath 'assemblies'
     $requiredAssemblies = Get-ChildItem -Path $RequiredAssembliesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Filter '*.dll' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
@@ -73,7 +73,7 @@
     $manifest.RequiredAssemblies | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [RequiredAssemblies] - [$_]" }
 
     Write-Verbose "[$($task -join '] - [')] - [NestedModules]"
-    $nestedModulesFolderPath = Join-Path $moduleFolder 'modules'
+    $nestedModulesFolderPath = Join-Path $SourceFolderPath 'modules'
     $nestedModules = Get-ChildItem -Path $nestedModulesFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1', '*.ps1' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
@@ -83,7 +83,7 @@
     Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess]"
     $allScriptsToProcess = @('scripts', 'classes') | ForEach-Object {
         Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess] - Processing [$_]"
-        $scriptsFolderPath = Join-Path $moduleFolder $_
+        $scriptsFolderPath = Join-Path $SourceFolderPath $_
         $scriptsToProcess = Get-ChildItem -Path $scriptsFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.ps1' |
             Select-Object -ExpandProperty FullName |
             ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
@@ -93,21 +93,21 @@
         $manifest.ScriptsToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [ScriptsToProcess] - [$_]" }
 
         Write-Verbose "[$($task -join '] - [')] - [TypesToProcess]"
-        $typesToProcess = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.Types.ps1xml' |
+        $typesToProcess = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.Types.ps1xml' |
             Select-Object -ExpandProperty FullName |
             ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.TypesToProcess = $typesToProcess.count -eq 0 ? @() : @($typesToProcess)
     $manifest.TypesToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [TypesToProcess] - [$_]" }
 
     Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess]"
-    $formatsToProcess = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.Format.ps1xml' |
+    $formatsToProcess = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.Format.ps1xml' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.FormatsToProcess = $formatsToProcess.count -eq 0 ? @() : @($formatsToProcess)
     $manifest.FormatsToProcess | ForEach-Object { Write-Verbose "[$($task -join '] - [')] - [FormatsToProcess] - [$_]" }
 
     Write-Verbose "[$($task -join '] - [')] - [DscResourcesToExport]"
-    $dscResourcesToExportFolderPath = Join-Path $moduleFolder 'dscResources'
+    $dscResourcesToExportFolderPath = Join-Path $SourceFolderPath 'dscResources'
     $dscResourcesToExport = Get-ChildItem -Path $dscResourcesToExportFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
@@ -120,7 +120,7 @@
     $manifest.VariablesToExport = Get-PSModuleVariablesToExport -SourceFolderPath $SourceFolderPath
 
     Write-Verbose "[$($task -join '] - [')] - [ModuleList]"
-    $moduleList = Get-ChildItem -Path $moduleFolder -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' -Exclude "$moduleName.psm1" |
+    $moduleList = Get-ChildItem -Path $SourceFolderPath -Recurse -File -ErrorAction SilentlyContinue -Include '*.psm1' -Exclude "$moduleName.psm1" |
         Select-Object -ExpandProperty FullName |
         ForEach-Object { $_.Replace($SourceFolderPath, '').TrimStart($pathSeparator) }
     $manifest.ModuleList = $moduleList.count -eq 0 ? @() : @($moduleList)
@@ -132,7 +132,7 @@
     $capturedVersions = @()
     $capturedPSEdition = @()
 
-    $files = $moduleFolder | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
+    $files = $SourceFolderPath | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
     foreach ($file in $files) {
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
         $task.Add($relativePath)
