@@ -136,7 +136,7 @@
     Write-Verbose "[$moduleName] - Processing [$($files.Count)] files"
     foreach ($file in $files) {
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
-        Write-Verbose "[$moduleName] - Processing [$relativePath]"
+        Write-Verbose "[$moduleName] - [$relativePath]"
 
         if ($file.extension -in '.psm1', '.ps1') {
             $fileContent = Get-Content -Path $file
