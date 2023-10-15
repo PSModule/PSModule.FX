@@ -28,7 +28,6 @@
     $modulesOutputFolderPath = Join-Path -Path $OutputFolderPath 'modules'
     Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"
     $modulesOutputFolder = New-Item -Path $modulesOutputFolderPath -ItemType Directory -Force
-    $env:PSModulePath += ";$modulesOutputFolderPath"
 
     $docsOutputFolderPath = Join-Path -Path $OutputFolderPath 'docs'
     Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"

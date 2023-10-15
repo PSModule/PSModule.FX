@@ -16,21 +16,19 @@
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo -Verbose:$false
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
 
-    Write-Verbose "Importing module"
-    Import-Module $moduleOutputFolderPath
-    Write-Output "::group::[$($task -join '] - [')] - Generate help"
+    Write-Verbose 'Importing module'
+    $env:PSModulePath += ";$SourceFolderPath"
+    Import-Module $SourceFolderPath
 
-    Write-Verbose "[$($task -join '] - [')] - [Help] - List loaded modules"
+    Write-Verbose "[$moduleName] - List loaded modules"
     $availableModules = Get-Module -Verbose:$false
-    $availableModules
-    Write-Output '::endgroup::'
+    $availableModules | Select-Object Name, Version, PreRelease, ModuleType, Author, CompanyName
 
-    Write-Verbose "[$($task -join '] - [')] - [Help] - Building help"
-    if ($moduleName -in $availableModules) {
-        New-MarkdownHelp -Module $moduleName -OutputFolder ".\outputs\docs\$moduleName" -Force
+    if ($moduleName -notin $availableModules) {
     } else {
         Write-Warning "[$($task -join '] - [')] - [Help] - Module [$moduleName] not found"
     }
+    New-MarkdownHelp -Module $moduleName -OutputFolder ".\outputs\docs\$moduleName" -Force
     Write-Output '::endgroup::'
 
 }
