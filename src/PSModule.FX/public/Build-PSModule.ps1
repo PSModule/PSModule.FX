@@ -13,6 +13,11 @@ function Build-PSModule {
 
         Builds all modules in the 'src' folder and stores them in the 'outputs' folder
 
+        .EXAMPLE
+        Build-PSModule -Path 'src' -Name 'PSModule.FX' -OutputPath 'outputs'
+
+        Builds the 'PSModule.FX' module in the 'src' folder and stores it in the 'outputs' folder.
+
         .NOTES
         #DECISION: Modules are default located under the '.\src' folder which is the root of the repo.
         #DECISION: Module name = the name of the folder under src. Inherited decision from PowerShell team.
@@ -23,6 +28,10 @@ function Build-PSModule {
         # Path to the folder where the modules are located.
         [Parameter()]
         [string] $Path = 'src',
+
+        # Name of the module to process.
+        [Parameter()]
+        [string] $Name = '*',
 
         # Path to the folder where the built modules are outputted.
         [Parameter()]
@@ -40,7 +49,7 @@ function Build-PSModule {
     Write-Verbose "Creating docs output folder [$docsOutputFolderPath]"
     $docsOutputFolder = New-Item -Path $docsOutputFolderPath -ItemType Directory -Force
 
-    $moduleFolders = Get-PSModuleFolders -Path $Path
+    $moduleFolders = Get-PSModuleFolders -Path $Path | Where-Object { $_.Name -like $Name }
     Write-Verbose "Found $($moduleFolders.Count) module(s)"
     $moduleFolders | ForEach-Object {
         Write-Verbose "[$($_.Name)]"

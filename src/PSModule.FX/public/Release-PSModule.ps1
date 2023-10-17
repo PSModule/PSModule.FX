@@ -1,8 +1,14 @@
 ﻿#Requires -Modules platyPS
 
-function Release-PSModule {
+function Publish-PSModule {
+    [Alias('Release-Module')]
     [CmdletBinding(SupportsShouldProcess)]
     param(
+        # Name of the module to process.
+        [Parameter()]
+        [string] $Name = '*',
+
+        # The API key for the destination repository.
         [Parameter(Mandatory)]
         [string] $APIKey
     )
@@ -17,7 +23,7 @@ function Release-PSModule {
     # Gather some basic info
     ########################
 
-    $outputPath = Get-Item -Path .\outputs\ | Select-Object -ExpandProperty FullName
+    $outputPath = Get-Item -Path .\outputs\modules | Where-Object { $_.Name -like $Name } | Select-Object -ExpandProperty FullName
     $env:PSModulePath += ":$SRCPath"
     $env:PSModulePath -Split ':'
 
