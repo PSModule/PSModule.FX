@@ -16,11 +16,12 @@
     Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)" -Verbose
 
     $containerParams = @{
-        Path = (Join-Path $PSScriptRoot 'tests' 'PSSA.Tests.ps1')
+        Path = (Join-Path $PSScriptRoot 'tests' 'PSScriptAnalyser' 'PSScriptAnalyser.Tests.ps1')
         Data = @{
             Path = $ModuleFolder
         }
     }
+
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
 
