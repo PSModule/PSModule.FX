@@ -29,8 +29,8 @@ jobs:
       #   with:
       #     Verbose: true
 
-      - name: Release-PSModule
-        uses: PSModule/Release-PSModule@main
+      - name: Publish-PSModule
+        uses: PSModule/Publish-PSModule@main
         with:
           APIKey: ${{ secrets.APIKEY }}
           Verbose: true
