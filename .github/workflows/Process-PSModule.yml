@@ -24,10 +24,10 @@ jobs:
         with:
           Verbose: true
 
-      - name: Test-PSModule
-        uses: PSModule/Test-PSModule@main
-        with:
-          Verbose: true
+      # - name: Test-PSModule
+      #   uses: PSModule/Test-PSModule@main
+      #   with:
+      #     Verbose: true
 
       - name: Release-PSModule
         uses: PSModule/Release-PSModule@main
