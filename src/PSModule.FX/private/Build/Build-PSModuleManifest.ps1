@@ -294,7 +294,9 @@
     $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
+
     $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = Invoke-Formatter -ScriptDefinition $manifestContent -Verbose
 
     # Remove trailing whitespaces (Comply with PSAvoidTrailingWhitespace)
     $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
