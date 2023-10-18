@@ -16,24 +16,16 @@ jobs:
 
       - name: Initialize-PSModule
         uses: PSModule/Initialize-PSModule@main
-        with:
-          Verbose: true
-          Version: '0.0.85'
 
       - name: Build-PSModule
         uses: PSModule/Build-PSModule@main
-        with:
-          Verbose: true
 
       # - name: Test-PSModule
       #   uses: PSModule/Test-PSModule@main
-      #   with:
-      #     Verbose: true
 
       - name: Publish-PSModule
         uses: PSModule/Publish-PSModule@main
         with:
           APIKey: ${{ secrets.APIKEY }}
-          Verbose: true
         env:
           GH_TOKEN: ${{ github.token }} # Used for GitHub CLI authentication

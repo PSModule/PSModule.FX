@@ -295,15 +295,22 @@
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
 
+    Write-Verbose 'Invoke-Formatter on manifest file'
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
     $manifestContent = Invoke-Formatter -ScriptDefinition $manifestContent -Verbose
+    Set-Content -Path $outputManifestPath -Value $manifestContent
 
-    # Remove trailing whitespaces (Comply with PSAvoidTrailingWhitespace)
+    Write-Verbose 'Removing trailing whitespaces from manifest file'
+    # Required to comply with PSAvoidTrailingWhitespace rule
+    $manifestContent = Get-Content -Path $outputManifestPath
     $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
-
+    Set-Content -Path $outputManifestPath -Value $manifestContent
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
     Get-Content -Path $outputManifestPath
     Write-Output '::endgroup::'
 
 }
+
+
+$outputManifestPath = 'C:\Repos\GitHub\PSModule\Framework\PSModule.FX\src\PSModule.FX\PSModule.FX.psd1'
