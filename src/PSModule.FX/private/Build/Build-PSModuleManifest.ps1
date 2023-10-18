@@ -311,6 +311,3 @@
     Write-Output '::endgroup::'
 
 }
-
-
-$outputManifestPath = 'C:\Repos\GitHub\PSModule\Framework\PSModule.FX\src\PSModule.FX\PSModule.FX.psd1'
