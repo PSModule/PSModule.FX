@@ -1,10 +1,4 @@
 @{
-    # Author of this module
-    Author      = 'Marius Storhaug'
-
-    # Version number of this module
-    ModuleVersion = '0.0.0'
-
     # Description of the functionality provided by this module
     Description   = 'PSModule Framework PowerShell Module'
 
