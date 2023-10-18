@@ -18,6 +18,7 @@ jobs:
         uses: PSModule/Initialize-PSModule@main
         with:
           Verbose: true
+          Version: '0.0.85'
 
       - name: Build-PSModule
         uses: PSModule/Build-PSModule@main

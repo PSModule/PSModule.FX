@@ -295,7 +295,7 @@
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
 
-    $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = Get-Content -Path $outputManifestPath -Raw
     $manifestContent = Invoke-Formatter -ScriptDefinition $manifestContent -Verbose
 
     # Remove trailing whitespaces (Comply with PSAvoidTrailingWhitespace)
