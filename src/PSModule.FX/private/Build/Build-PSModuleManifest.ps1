@@ -294,6 +294,11 @@
     $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
+    $manifestContent = Get-Content -Path $outputManifestPath
+
+    # Remove trailing whitespaces (Comply with PSAvoidTrailingWhitespace)
+    $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
+
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
     Get-Content -Path $outputManifestPath
