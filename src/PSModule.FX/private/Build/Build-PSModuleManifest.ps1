@@ -309,5 +309,4 @@
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
     Get-Content -Path $outputManifestPath
     Write-Output '::endgroup::'
-
 }
