@@ -4,12 +4,11 @@
         [Parameter(Mandatory)]
         [string] $ModuleFolderPath
     )
-
-    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
-
-    Write-Output "::group::[$moduleName]"
+    Write-Output "::endgroup::"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
+
+    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
     Write-Verbose "[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
     Invoke-PSScriptAnalyzerTest -ModuleFolder $moduleFolder -Verbose:$false
