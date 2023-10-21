@@ -16,7 +16,7 @@
     Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)" -Verbose
 
     $containerParams = @{
-        Path = (Join-Path $PSScriptRoot 'tests' 'PSScriptAnalyser' 'PSScriptAnalyser.Tests.ps1')
+        Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyser' 'PSScriptAnalyser.Tests.ps1')
         Data = @{
             Path = $ModuleFolder
         }
