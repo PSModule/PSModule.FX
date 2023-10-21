@@ -25,20 +25,21 @@ function Build-PSModule {
     #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        # Path to the folder where the modules are located.
-        [Parameter()]
-        [string] $Path = 'src',
 
         # Name of the module to process.
         [Parameter()]
         [string] $Name = '*',
+
+        # Path to the folder where the modules are located.
+        [Parameter()]
+        [string] $Path = 'src',
 
         # Path to the folder where the built modules are outputted.
         [Parameter()]
         [string] $OutputPath = 'outputs'
     )
 
-    Write-Output "::group::Starting..."
+    Write-Output '::group::Starting...'
 
     $modulesOutputFolderPath = Join-Path -Path $OutputPath 'modules'
     Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"

@@ -1,4 +1,6 @@
 @{
+    ModuleVersion = '0.0.1'
+
     # Description of the functionality provided by this module
     Description   = 'PSModule Framework PowerShell Module'
 
