@@ -21,7 +21,7 @@ BeforeDiscovery {
 
 Describe 'Module design tests' {
     It 'File name and function name should match' -ForEach $scriptFiles {
-        $fileName | Should -BeExactly $functionName -Because "Script files should be called the same as the function they contain"
+        $fileName | Should -BeExactly $functionName -Because "the script files should be called the same as the function they contain"
     }
 
     # It 'Script file should only contain max one function or filter' {}
