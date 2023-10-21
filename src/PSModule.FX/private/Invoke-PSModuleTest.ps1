@@ -7,7 +7,6 @@
     Write-Output "::endgroup::"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
-
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
     Write-Verbose "[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
@@ -18,7 +17,7 @@
     Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
 
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - Specific tests"
-    $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' $moduleName
+    $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent) -ChildPath 'tests' $moduleName
     if (Test-Path -Path $testFolderPath) {
         Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
     }
