@@ -33,10 +33,6 @@ function Publish-PSModule {
     # Gather some basic info
     ########################
 
-    $outputPath = Get-Item -Path .\outputs\modules | Select-Object -ExpandProperty FullName
-    $env:PSModulePath += ":$SRCPath"
-    $env:PSModulePath -Split ':'
-
     $modulesOutputFolderPath = Join-Path -Path 'outputs' 'modules'
     Write-Verbose "Getting module output folder [$modulesOutputFolderPath]"
     $modulesOutputFolder = Get-Item -Path $modulesOutputFolderPath
