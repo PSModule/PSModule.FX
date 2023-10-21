@@ -1,3 +1,5 @@
-﻿It 'Is a module' {
-    $true | Should -Be $true
+﻿Describe 'CodingStyle' {
+    It 'Is following the coding style for PSModule Framework' {
+        $true | Should -Be $true
+    }
 }
