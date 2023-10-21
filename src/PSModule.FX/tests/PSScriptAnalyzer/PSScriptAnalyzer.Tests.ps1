@@ -24,7 +24,7 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
 
         $issues = $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
             $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-            "$([Environment]::NewLine)$relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
+            "$relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
         $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
     }
