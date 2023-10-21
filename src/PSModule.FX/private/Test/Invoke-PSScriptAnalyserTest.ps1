@@ -39,6 +39,7 @@
                 Enabled       = $true
             }
             Output     = @{
+                CIFormat            = 'None'
                 Verbosity           = 'Detailed'
                 StackTraceVerbosity = 'None'
             }
