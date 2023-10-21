@@ -1,4 +1,17 @@
 ﻿function Invoke-PSModuleTest {
+    <#
+        .SYNOPSIS
+        Performs tests on a module.
+
+        .DESCRIPTION
+        Performs tests on a module.
+
+        .EXAMPLE
+        Invoke-PSModuleTest -ModuleFolderPath $ModuleFolderPath
+
+        Performs tests on a module located at $ModuleFolderPath.
+    #>
+    [CmdletBinding()]
     param(
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
