@@ -297,16 +297,10 @@
 
     Write-Verbose 'Invoke-Formatter on manifest file'
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
-    $manifestContent = Invoke-Formatter -ScriptDefinition $manifestContent -Verbose
-    Set-Content -Path $outputManifestPath -Value $manifestContent
-
-    Write-Verbose 'Removing trailing whitespaces from manifest file'
-    # Required to comply with PSAvoidTrailingWhitespace rule
-    $manifestContent = Get-Content -Path $outputManifestPath
-    $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
-    Set-Content -Path $outputManifestPath -Value $manifestContent
+    Invoke-Formatter -ScriptDefinition $manifestContent -Verbose |
+        Out-File -FilePath $outputManifestPath -Encoding utf8 -Force
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
-    Get-Content -Path $outputManifestPath
+    Get-Content -Path $outputManifestPath -Raw
     Write-Output '::endgroup::'
 }
