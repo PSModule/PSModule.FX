@@ -25,7 +25,7 @@ Context 'Module design tests' {
 
             $issues = @('')
             $issues += $scriptFiles | Where-Object { $_.filename -ne $_.functionName } | ForEach-Object {
-                "$($_.filePath) contains: [$($_.functionName)]. Change file name or function/filter name so they match."
+                " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
             }
             $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
