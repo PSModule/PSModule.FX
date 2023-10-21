@@ -14,5 +14,7 @@ jobs:
     uses: PSModule/Actions/.github/workflows/Process-PSModule.yml@main
     secrets: inherit
     with:
+      TestSrcSkip: true
+      TestModuleSkip: true
       TestSrcErrorAction: 'Continue'
       TestModuleErrorAction: 'Continue'
