@@ -6,13 +6,10 @@ Param(
     [Parameter(Mandatory)]
     [string] $SettingsFilePath
 )
-BeforeDiscovery {
-    # Get all PSScript Analyzer Rules and save them in an array
-    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
-    Write-Warning "Discovered [$($rules.Count)] rules"
-}
 
 BeforeAll {
+    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
+    Write-Warning "Discovered [$($rules.Count)] rules"
     $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
     Write-Warning "Found [$($testResults.Count)] issues"
 }
