@@ -12,7 +12,7 @@
 
     Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
-    Invoke-PSSATest -ModuleFolder $moduleFolder -Verbose:$false
+    Invoke-PSScriptAnalyzerTest -ModuleFolder $moduleFolder -Verbose:$false
     Write-Output "::endgroup::"
 
     Write-Output "::group::[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
