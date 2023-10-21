@@ -18,9 +18,11 @@
 
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - Specific tests"
     $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName
-    Write-Verbose "[$moduleName] - TestFolderPath - [$testFolderPath]"
+    Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
     if (Test-Path -Path $testFolderPath) {
         Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
+    } else {
+        Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
     }
 
     Write-Verbose "[$moduleName] - Done"
