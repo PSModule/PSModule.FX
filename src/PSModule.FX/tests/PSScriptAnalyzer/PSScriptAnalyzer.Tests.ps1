@@ -8,32 +8,32 @@ Param(
 )
 
 # Get all PSScript Analyzer Rules and save them in an array
-$scriptAnalyzerRules = Get-ScriptAnalyzerRule
-$Rules = @()
-$scriptAnalyzerRules | ForEach-Object {
-    $Rules += @{
-        RuleName    = $_.RuleName
-        CommonName  = $_.CommonName
-        Description = $_.Description
-        SourceType  = $_.SourceType
-        SourceName  = $_.SourceName
-        Severity    = $_.Severity
-    }
-}
+$rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
 
-# Create an array of the types of rules
-$Severities = @('Information', 'Warning', 'Error')
+$testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsPath -Recurse
 
-foreach ($Severity in $Severities) {
-    Describe "Testing PSSA $Severity Rules" -Tag $Severity {
-        It '<CommonName> (<RuleName>)' -ForEach ($Rules | Where-Object Severity -EQ $Severity) {
-            param ($RuleName)
-            #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
-            $issues = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsPath -IncludeRule $RuleName -Recurse | ForEach-Object {
-                    "$([Environment]::NewLine)$($_.ScriptPath):L$($_.Line): $($_.Message)"
-                }
-            $issues += $_.SuggestedCorrections
-            $issues | Should -BeNullOrEmpty
+# Line                 : 20
+# Column               : 21
+# Message              : Use space before and after binary and assignment operators.
+# Extent               : =
+# RuleName             : PSUseConsistentWhitespace
+# Severity             : Warning
+# ScriptName           : PSScriptAnalyzer.Tests.ps1
+# ScriptPath           : C:\Repos\GitHub\PSModule\Framework\PSModule.FX\src\PSModule.FX\tests\PSScriptAnalyzer\PSScriptAnalyzer.Tests.ps1
+# RuleSuppressionID    :
+# SuggestedCorrections : {Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic.CorrectionExtent}
+# IsSuppressed         : False
+
+Describe 'PSScriptAnalyzer with settings' {
+    It '<CommonName> (<RuleName>)' -ForEach $rules {
+        param ($RuleName)
+
+        $issues = $testResults | Where-Object -RuleName $RuleName | ForEach-Object {
+            $relativePath = $_.ScriptPath.Replace($Path, '')
+            $suggestion = $_.SuggestedCorrections
+            "$([Environment]::NewLine)$relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
+        $issues += $suggestion
+        $issues | Should -BeNullOrEmpty
     }
 }
