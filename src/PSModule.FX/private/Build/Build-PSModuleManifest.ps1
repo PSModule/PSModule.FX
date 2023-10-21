@@ -145,8 +145,18 @@
                     $capturedMatches = $matches[1].Split(',').trim()
                     $capturedMatches | ForEach-Object {
                         Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_]"
-                        # TODO: Support hashtable format
-                        $capturedModules += $_
+                        $hashtable = '\@\s*\{[^\}]*\}'
+                        if ($_ -match $hashtable) {
+                            $modules = ConvertTo-Hashtable -InputString $_
+                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_] - Hashtable"
+                            $modules.Keys | ForEach-Object {
+                                Write-Verbose "$($modules[$_])]"
+                            }
+                            $capturedModules += $modules
+                        } else {
+                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_] - String"
+                            $capturedModules += $_
+                        }
                     }
                 }
                 # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
