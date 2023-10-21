@@ -28,12 +28,11 @@ Describe 'PSScriptAnalyzer with settings' {
     It '<CommonName> (<RuleName>)' -ForEach $rules {
         param ($RuleName)
 
-        $issues = $testResults | Where-Object -RuleName $RuleName | ForEach-Object {
+        $issues = $testResults | Where-Object -Property RuleName -eq $RuleName | ForEach-Object {
             $relativePath = $_.ScriptPath.Replace($Path, '')
             $suggestion = $_.SuggestedCorrections
             "$([Environment]::NewLine)$relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
-        $issues += $suggestion
-        $issues | Should -BeNullOrEmpty
+        $issues | Should -BeNullOrEmpty -Because $suggestion
     }
 }

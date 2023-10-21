@@ -26,7 +26,6 @@
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
 
-
     $pesterParams = @{
         Configuration = @{
             Run        = @{
@@ -34,8 +33,8 @@
                 PassThru  = $false
             }
             TestResult = @{
-                TestSuiteName = 'PSSA'
-                OutputPath    = '.\outputs\PSSA.Results.xml'
+                TestSuiteName = 'PSScriptAnalyzer'
+                OutputPath    = '.\outputs\PSScriptAnalyzer.Results.xml'
                 OutputFormat  = 'NUnitXml'
                 Enabled       = $true
             }
