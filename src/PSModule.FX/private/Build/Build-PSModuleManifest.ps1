@@ -187,8 +187,7 @@
     Write-Verbose "[$moduleName] - [CompatiblePSEditions]"
     $capturedPSEdition = $capturedPSEdition | Sort-Object -Unique
     if ($capturedPSEdition.count -eq 2) {
-        Write-Error 'The module is requires both Desktop and Core editions.'
-        return 1
+        throw 'The module is requires both Desktop and Core editions.'
     }
     $manifest.CompatiblePSEditions = $capturedPSEdition.count -eq 0 ? @('Core', 'Desktop') : @($capturedPSEdition)
     $manifest.CompatiblePSEditions | ForEach-Object { Write-Verbose "[$moduleName] - [CompatiblePSEditions] - [$_]" }
@@ -228,8 +227,7 @@
     $manifest.Tags | ForEach-Object { Write-Verbose "[$moduleName] - [Tags] - [$_]" }
 
     if ($PSData.Tags -contains 'PSEdition_Core' -and $manifest.PowerShellVersion -lt '6.0') {
-        Write-Error "[$moduleName] - [Tags] - Cannot be PSEdition = 'Core' and PowerShellVersion < 6.0"
-        return 1
+        throw "[$moduleName] - [Tags] - Cannot be PSEdition = 'Core' and PowerShellVersion < 6.0"
     }
 
     Write-Verbose "[$moduleName] - [LicenseUri]"

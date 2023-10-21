@@ -1,6 +1,16 @@
 ﻿#Requires -Modules platyPS
 
 function Publish-PSModule {
+    <#
+        .SYNOPSIS
+        Publishes a module to the PowerShell Gallery and GitHub Pages.
+
+        .DESCRIPTION
+        Publishes a module to the PowerShell Gallery and GitHub Pages.
+
+        .EXAMPLE
+        Publish-PSModule -Name 'PSModule.FX' -APIKey $env:PSGALLERY_API_KEY
+    #>
     [Alias('Release-Module')]
     [CmdletBinding(SupportsShouldProcess)]
     param(

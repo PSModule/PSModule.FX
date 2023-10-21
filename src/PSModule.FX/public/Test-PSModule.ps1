@@ -1,6 +1,17 @@
 ﻿#Requires -Modules Pester, PSScriptAnalyzer
 
 function Test-PSModule {
+    <#
+        .SYNOPSIS
+        Test a module.
+
+        .DESCRIPTION
+        Test a module using Pester and PSScriptAnalyzer.
+        Runs both custom tests defined in a module's tests folder and the default tests.
+
+        .EXAMPLE
+        Test-PSModule -Name 'PSModule.FX' -OutputPath 'outputs'
+    #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
         # Name of the module to process.
