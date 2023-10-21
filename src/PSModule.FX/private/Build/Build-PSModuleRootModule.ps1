@@ -94,6 +94,6 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build root module - Result"
-    Get-Content -Path $rootModuleFile
+    Show-FileContent -Path $rootModuleFile
     Write-Output '::endgroup::'
 }

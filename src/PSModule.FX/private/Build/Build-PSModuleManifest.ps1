@@ -304,6 +304,6 @@
         Out-File -FilePath $outputManifestPath -Encoding utf8 -Force
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
-    Get-Content -Path $outputManifestPath -Raw
+    Show-FileContent -Path $outputManifestPath
     Write-Output '::endgroup::'
 }
