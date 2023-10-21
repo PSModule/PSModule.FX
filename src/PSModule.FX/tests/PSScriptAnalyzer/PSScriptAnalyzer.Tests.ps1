@@ -10,7 +10,7 @@ Param(
 # Get all PSScript Analyzer Rules and save them in an array
 $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
 
-$testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsPath -Recurse
+$testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
 
 # Line                 : 20
 # Column               : 21
