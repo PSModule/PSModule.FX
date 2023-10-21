@@ -1,4 +1,4 @@
-﻿function Invoke-PSSATest {
+﻿function Invoke-PSScriptAnalyserTest {
     [CmdLetBinding()]
     param(
         # Path to the folder where the built modules are outputted.
@@ -39,7 +39,7 @@
                 Enabled       = $true
             }
             Output     = @{
-                CIFormat            = 'None'
+                CIFormat            = 'Auto'
                 Verbosity           = 'Detailed'
                 StackTraceVerbosity = 'None'
             }

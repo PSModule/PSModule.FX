@@ -15,6 +15,14 @@
     Invoke-PSSATest -ModuleFolder $moduleFolder -Verbose:$false
     Write-Output "::endgroup::"
 
+    Write-Output "::group::[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
+    $TestFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
+    Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
+    Write-Output '::endgroup::'
+
+    # Write-Output "::group::[$moduleName] - Invoke-PSCustomTests - [$moduleName] specific tests"
+    # $TestFolderPath = Join-Path -Path $ModuleFolderPath -ChildPath 'tests' $moduleName
+
     Write-Verbose "[$moduleName] - Done"
 }
 

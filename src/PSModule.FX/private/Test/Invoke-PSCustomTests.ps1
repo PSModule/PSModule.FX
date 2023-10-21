@@ -27,12 +27,13 @@
                 PassThru  = $false
             }
             TestResult = @{
-                TestSuiteName = 'PSSA'
+                TestSuiteName = 'CustomTest'
                 OutputPath    = '.\outputs\CustomTest.Results.xml'
                 OutputFormat  = 'NUnitXml'
                 Enabled       = $true
             }
             Output     = @{
+                CIFormat            = 'Auto'
                 Verbosity           = 'Detailed'
                 StackTraceVerbosity = 'None'
             }
