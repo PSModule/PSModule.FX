@@ -10,15 +10,13 @@
     Write-Output "::group::[$moduleName]"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
-    Write-Output "::group::[$moduleName] - Invoke-ScriptAnalyzer"
+    Write-Verbose "[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
     Invoke-PSScriptAnalyzerTest -ModuleFolder $moduleFolder -Verbose:$false
-    Write-Output "::endgroup::"
 
-    Write-Output "::group::[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
+    Write-Verbose "[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
     $TestFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
     Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
-    Write-Output '::endgroup::'
 
     # Write-Output "::group::[$moduleName] - Invoke-PSCustomTests - [$moduleName] specific tests"
     # $TestFolderPath = Join-Path -Path $ModuleFolderPath -ChildPath 'tests' $moduleName
