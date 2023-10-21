@@ -1,4 +1,4 @@
-﻿function Invoke-PSScriptAnalyserTest {
+﻿function Invoke-PSScriptAnalyzerTest {
     [CmdLetBinding()]
     param(
         # Path to the folder where the built modules are outputted.
@@ -16,7 +16,7 @@
     Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)" -Verbose
 
     $containerParams = @{
-        Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyser' 'PSScriptAnalyser.Tests.ps1')
+        Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
         Data = @{
             Path = $ModuleFolder
         }
