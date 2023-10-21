@@ -4,7 +4,7 @@ Param(
     [string] $Path,
 
     [Parameter(Mandatory)]
-    [string] $SettingsPath
+    [string] $SettingsFilePath
 )
 
 # Get all PSScript Analyzer Rules and save them in an array
