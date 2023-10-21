@@ -22,7 +22,8 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
     It '<CommonName> (<RuleName>)' -ForEach $rules {
         param ($RuleName)
 
-        $issues = $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
+        $issues = @('')
+        $issues += $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
             $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
             "$relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
