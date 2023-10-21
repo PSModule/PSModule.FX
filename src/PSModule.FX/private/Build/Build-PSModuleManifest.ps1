@@ -300,7 +300,7 @@
 
     Write-Verbose 'Invoke-Formatter on manifest file'
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
-    
+
     Invoke-Formatter -ScriptDefinition $manifestContent -Verbose |
         Out-File -FilePath $outputManifestPath -Encoding utf8 -Force
 

@@ -5,7 +5,7 @@
         [string] $ModuleFolderPath
     )
     $failedTests = 0
-    Write-Output "::endgroup::"
+    Write-Output '::endgroup::'
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf

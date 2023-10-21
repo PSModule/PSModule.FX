@@ -19,7 +19,7 @@
     $containerParams = @{
         Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
         Data = @{
-            Path = $ModuleFolder
+            Path             = $ModuleFolder
             SettingsFilePath = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Settings.psd1')
         }
     }
