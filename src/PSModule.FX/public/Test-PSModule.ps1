@@ -10,7 +10,7 @@ function Test-PSModule {
         Runs both custom tests defined in a module's tests folder and the default tests.
 
         .EXAMPLE
-        Test-PSModule -Name 'PSModule.FX' -OutputPath 'outputs'
+        Test-PSModule -Name 'PSModule.FX' -Path 'outputs'
     #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -20,12 +20,12 @@ function Test-PSModule {
 
         # Path to the folder where the built modules are outputted.
         [Parameter()]
-        [string] $OutputPath = 'outputs'
+        [string] $Path
     )
 
     Write-Output '::group::Starting...'
 
-    $moduleFolders = Get-PSModuleFolders -Path $OutputPath | Where-Object { $_.Name -like $Name }
+    $moduleFolders = Get-PSModuleFolders -Path $Path | Where-Object { $_.Name -like $Name }
     Write-Verbose "Found $($moduleFolders.Count) module(s)"
     $moduleFolders | ForEach-Object {
         Write-Verbose "[$($_.Name)]"
