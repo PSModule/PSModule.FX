@@ -32,7 +32,6 @@
             Run        = @{
                 Container = New-PesterContainer @containerParams
                 PassThru  = $false
-                Exit      = $true
             }
             TestResult = @{
                 TestSuiteName = 'PSScriptAnalyzer'
