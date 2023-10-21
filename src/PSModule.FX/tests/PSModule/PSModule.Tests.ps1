@@ -10,7 +10,7 @@ BeforeDiscovery {
             $functionName = $matches[1]
             Write-Host "Function/filter name is: $functionName"
             $item = @{
-                fileName     = $_.Name
+                fileName     = $_.BaseName
                 filePath     = $_.FullName.Replace($Path, '').Trim('\').Trim('/')
                 functionName = $functionName
             }
