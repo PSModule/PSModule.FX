@@ -11,17 +11,28 @@
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
     Write-Verbose "[$moduleName] - Invoke-ScriptAnalyzer"
     $moduleFolder = Get-Item -Path $ModuleFolderPath
-    $failedTests += Invoke-PSScriptAnalyzerTest -ModuleFolder $moduleFolder -Verbose:$false
+    try {
+        Invoke-PSScriptAnalyzerTest -ModuleFolder $moduleFolder -Verbose:$false
+    } catch {
+        $failedTests += $LASTEXITCODE
+    }
 
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
     $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
-    $failedTests += Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
-
+    try {
+        Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
+    } catch {
+        $failedTests += $LASTEXITCODE
+    }
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - Specific tests"
     $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName
     Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
     if (Test-Path -Path $testFolderPath) {
-        $failedTests += Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
+        try {
+            Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
+        } catch {
+            $failedTests += $LASTEXITCODE
+        }
     } else {
         Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
     }

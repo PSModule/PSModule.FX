@@ -6,7 +6,7 @@
         }
         PSAvoidLongLines                   = @{
             Enable            = $true
-            MaximumLineLength = 120
+            MaximumLineLength = 150
         }
         PSAvoidSemicolonsAsLineTerminators = @{
             Enable = $true
