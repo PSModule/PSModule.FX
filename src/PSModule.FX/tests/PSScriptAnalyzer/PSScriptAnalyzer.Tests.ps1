@@ -6,12 +6,14 @@ Param(
     [Parameter(Mandatory)]
     [string] $SettingsFilePath
 )
+BeforeDiscovery {
+    # Get all PSScript Analyzer Rules and save them in an array
+    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
+}
 
-# Get all PSScript Analyzer Rules and save them in an array
-$rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
-
-$testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
-
+BeforeAll {
+    $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
+}
 # Line                 : 20
 # Column               : 21
 # Message              : Use space before and after binary and assignment operators.
@@ -24,7 +26,7 @@ $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Re
 # SuggestedCorrections : {Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic.CorrectionExtent}
 # IsSuppressed         : False
 
-Describe 'PSScriptAnalyzer with settings' {
+Describe "PSScriptAnalyzer tests using settings file [$SettingsFilePath]" {
     It '<CommonName> (<RuleName>)' -ForEach $rules {
         param ($RuleName)
 
