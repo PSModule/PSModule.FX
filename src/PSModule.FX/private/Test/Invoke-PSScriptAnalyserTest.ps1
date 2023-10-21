@@ -1,4 +1,5 @@
 ﻿function Invoke-PSScriptAnalyzerTest {
+    [OutputType([int])]
     [CmdLetBinding()]
     param(
         # Path to the folder where the built modules are outputted.
@@ -31,6 +32,7 @@
             Run        = @{
                 Container = New-PesterContainer @containerParams
                 PassThru  = $false
+                Exit      = $true
             }
             TestResult = @{
                 TestSuiteName = 'PSScriptAnalyzer'
