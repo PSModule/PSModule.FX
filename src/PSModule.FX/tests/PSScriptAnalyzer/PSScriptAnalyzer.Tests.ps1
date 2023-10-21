@@ -1,7 +1,10 @@
 ﻿[CmdLetBinding()]
 Param(
     [Parameter(Mandatory)]
-    [string] $Path
+    [string] $Path,
+
+    [Parameter(Mandatory)]
+    [string] $SettingsPath
 )
 
 # Get all PSScript Analyzer Rules and save them in an array
@@ -18,8 +21,6 @@ $scriptAnalyzerRules | ForEach-Object {
     }
 }
 
-$settingsPath = Join-Path $PSScriptRoot 'PSScriptAnalyzer.Settings.psd1'
-
 # Create an array of the types of rules
 $Severities = @('Information', 'Warning', 'Error')
 
@@ -28,7 +29,7 @@ foreach ($Severity in $Severities) {
         It '<CommonName> (<RuleName>)' -ForEach ($Rules | Where-Object Severity -EQ $Severity) {
             param ($RuleName)
             #Test all scripts for the given rule and if there is a problem display this problem in a nice an reabable format in the debug message and let the test fail
-            $issues = Invoke-ScriptAnalyzer -Path $Path -Settings $settingsPath -IncludeRule $RuleName -Recurse | ForEach-Object {
+            $issues = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsPath -IncludeRule $RuleName -Recurse | ForEach-Object {
                     "$([Environment]::NewLine)$($_.ScriptPath):L$($_.Line): $($_.Message)"
                 }
             $issues += $_.SuggestedCorrections
