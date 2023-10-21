@@ -1,4 +1,15 @@
 ﻿function Get-PSModuleManifest {
+    <#
+        .SYNOPSIS
+        Get the module manifest.
+
+        .DESCRIPTION
+        Get the module manifest as a hashtable.
+
+        .EXAMPLE
+        Get-PSModuleManifest -SourceFolderPath 'src/PSModule.FX'
+    #>
+    [OutputType([string], [System.IO.FileInfo], [System.Collections.Hashtable])]
     [CmdletBinding()]
     param(
         # Path to the folder where the module source code is located.
