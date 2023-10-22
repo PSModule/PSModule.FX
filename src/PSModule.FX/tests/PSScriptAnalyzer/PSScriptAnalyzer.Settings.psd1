@@ -13,9 +13,9 @@
         }
         PSPlaceCloseBrace                  = @{
             Enable             = $true
-            NoEmptyLineBefore  = $false
+            NewLineAfter       = $false
             IgnoreOneLineBlock = $true
-            NewLineAfter       = $true
+            NoEmptyLineBefore  = $false
         }
         PSPlaceOpenBrace                   = @{
             Enable             = $true
@@ -41,7 +41,7 @@
             CheckInnerBrace                         = $true
             CheckOpenBrace                          = $true
             CheckOpenParen                          = $true
-            CheckOperator                           = $false #Collides with PSAlignAssignmentStatement.CheckHashtable
+            CheckOperator                           = $true # Collides with PSAlignAssignmentStatement.CheckHashtable, but needed for OTBS?
             CheckPipe                               = $true
             CheckPipeForRedundantWhitespace         = $true
             CheckSeparator                          = $true
