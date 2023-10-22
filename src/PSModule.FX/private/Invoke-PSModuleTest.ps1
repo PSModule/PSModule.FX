@@ -45,12 +45,12 @@
 
     if ($failedTests -gt 0) {
         Write-Error "[$moduleName] - [$failedTests] tests failed"
-        $failedTests
     } else {
         Write-Verbose "[$moduleName] - All tests passed"
     }
 
     Write-Verbose "[$moduleName] - Done"
+    return $failedTests
 }
 
 # <#
