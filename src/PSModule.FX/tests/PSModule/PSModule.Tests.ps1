@@ -4,6 +4,7 @@ Param(
     [string] $Path
 )
 
+# These tests are for the whole module and its parts. The scope of these tests are on the src folder and the specific module folder within it.
 Context 'Module design tests' {
     Describe 'Script files' {
         It 'Script file name and function/filter name should match' {

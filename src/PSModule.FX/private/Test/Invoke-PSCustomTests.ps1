@@ -24,7 +24,7 @@
     $pesterParams = @{
         Configuration = @{
             Run        = @{
-                Container = New-PesterContainer @containerParams
+                Container = New-PesterContainer @containerParams # Can hold an array of Containers
                 PassThru  = $false
             }
             TestResult = @{
