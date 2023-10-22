@@ -46,5 +46,5 @@
     Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 5)"
 
     Invoke-Pester @pesterParams
-
+    return $LASTEXITCODE
 }
