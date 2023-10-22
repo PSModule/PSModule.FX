@@ -19,7 +19,6 @@
         [string] $ModuleFolderPath
     )
     $failedTests = 0
-    Write-Output '::endgroup::'
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
@@ -30,7 +29,6 @@
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
     $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
     $failedTests += Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $TestFolderPath -Verbose:$false
-
 
     Write-Verbose "[$moduleName] - Invoke-PSCustomTests - Specific tests"
     $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName

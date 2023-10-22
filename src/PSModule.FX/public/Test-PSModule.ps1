@@ -31,7 +31,8 @@ function Test-PSModule {
     $moduleFolders | ForEach-Object {
         Write-Verbose "[$($_.Name)]"
     }
-
+    Write-Output '::endgroup::'
+    
     $failedTests = 0
     foreach ($moduleFolder in $moduleFolders) {
         try {

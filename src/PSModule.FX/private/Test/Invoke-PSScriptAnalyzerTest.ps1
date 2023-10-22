@@ -29,17 +29,24 @@
 
     $pesterParams = @{
         Configuration = @{
-            Run        = @{
+            Run          = @{
                 Container = New-PesterContainer @containerParams
                 PassThru  = $false
             }
-            TestResult = @{
+            TestResult   = @{
                 TestSuiteName = 'PSScriptAnalyzer'
                 OutputPath    = '.\outputs\PSScriptAnalyzer.Results.xml'
                 OutputFormat  = 'NUnitXml'
                 Enabled       = $true
             }
-            Output     = @{
+            CodeCoverage = @{
+                Enabled               = $true
+                OutputPath            = '.\outputs\CodeCoverage.xml'
+                OutputFormat          = 'JaCoCo'
+                OutputEncoding        = 'UTF8'
+                CoveragePercentTarget = 75
+            }
+            Output       = @{
                 CIFormat            = 'Auto'
                 Verbosity           = 'Detailed'
                 StackTraceVerbosity = 'None'
