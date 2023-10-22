@@ -58,5 +58,12 @@ Context 'Module design tests' {
         # It 'datatype for parameters and parameter name are separated by a single space' {}
         # It 'parameters are separated by a blank line' {}
     }
+}
 
+Context 'Manifest file' {
+    It 'has a manifest file' {}
+    It 'has a valid license URL' {}
+    It 'has a valid project URL' {}
+    It 'has a valid icon URL' {}
+    It 'has a valid help URL' {}
 }
