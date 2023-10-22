@@ -38,11 +38,14 @@ Context 'Module design tests' {
     }
 
     Describe 'Function/filder design' {
+        # It 'comment based doc block start is indented with 4 spaces' {}
+        # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
         # It 'has output documentation for all functions' {}
         # It 'has [CmdletBinding()] attribute' {}
+        # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {} # I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
     }
 
@@ -50,6 +53,10 @@ Context 'Module design tests' {
         # It 'has parameter description for all functions' {}
         # It 'has parameter validation for all functions' {}
         # It 'parameters have [Parameters()] attribute' {}
+        # It 'boolean parameters to the [Parameter()] attribute are written without assignments' {} # I.e. [Parameter(Mandatory)] instead of [Parameter(Mandatory = $true)]
+        # It 'datatype for parameters are written on the same line as the parameter name' {}
+        # It 'datatype for parameters and parameter name are separated by a single space' {}
+        # It 'parameters are separated by a blank line' {}
     }
 
 }
