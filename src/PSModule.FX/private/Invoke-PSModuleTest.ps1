@@ -22,7 +22,7 @@
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
-    Write-Verbose "[$moduleName] - Invoke-ScriptAnalyzer"
+    Write-Host "::group::[$moduleName] - Invoke-ScriptAnalyzer"
     $containerParams = @{
         Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
         Data = @{
@@ -33,8 +33,9 @@
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
+    Write-Host "::endgroup::"
 
-    Write-Verbose "[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
+    Write-Host "::group::[$moduleName] - Invoke-PSCustomTests - PSModule defaults"
     $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
     $containerParams = @{
         Path = $testFolderPath
@@ -45,8 +46,9 @@
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
     $containers += New-PesterContainer @containerParams
+    Write-Host "::endgroup::"
 
-    Write-Verbose "[$moduleName] - Invoke-PSCustomTests - Specific tests"
+    Write-Host "::group::[$moduleName] - Invoke-PSCustomTests - Specific tests"
     $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName
     Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
     if (Test-Path -Path $testFolderPath) {
@@ -62,6 +64,7 @@
     } else {
         Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
     }
+    Write-Host '::endgroup::'
 
     $pesterParams = @{
         Configuration = @{
@@ -88,6 +91,7 @@
                 Verbosity           = 'Detailed'
             }
         }
+        Verbose       = $false
     }
 
     Write-Verbose 'PesterParams:'
