@@ -11,6 +11,7 @@
 
         Performs tests on a module located at $ModuleFolderPath.
     #>
+    [OutputType([int])]
     [CmdletBinding()]
     param(
         # Path to the folder where the built modules are outputted.
