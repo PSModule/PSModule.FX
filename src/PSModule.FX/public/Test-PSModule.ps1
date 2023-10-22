@@ -12,6 +12,7 @@ function Test-PSModule {
         .EXAMPLE
         Test-PSModule -Name 'PSModule.FX' -Path 'outputs'
     #>
+    [OutputType([int])]
     [CmdletBinding(SupportsShouldProcess)]
     param(
         # Name of the module to process.
