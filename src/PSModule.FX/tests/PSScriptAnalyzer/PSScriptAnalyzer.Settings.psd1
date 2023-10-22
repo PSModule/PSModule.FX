@@ -41,7 +41,7 @@
             CheckInnerBrace                         = $true
             CheckOpenBrace                          = $true
             CheckOpenParen                          = $true
-            CheckOperator                           = $true # Collides with PSAlignAssignmentStatement.CheckHashtable, but needed for OTBS?
+            CheckOperator                           = $false # Collides with PSAlignAssignmentStatement.CheckHashtable
             CheckPipe                               = $true
             CheckPipeForRedundantWhitespace         = $true
             CheckSeparator                          = $true
