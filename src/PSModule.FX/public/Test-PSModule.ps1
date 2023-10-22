@@ -38,8 +38,7 @@ function Test-PSModule {
         try {
             $failedTests += Invoke-PSModuleTest -ModuleFolderPath $moduleFolder.FullName
         } catch {
-            Write-Error "$($_.Exception.Message)"
-            exit 1
+            throw "$($_.Exception.Message)"
         }
     }
     $failedTests
