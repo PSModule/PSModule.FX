@@ -31,7 +31,13 @@ function Test-PSModule {
         Write-Verbose "[$($_.Name)]"
     }
 
+    $failedTests = 0
     foreach ($moduleFolder in $moduleFolders) {
-        Invoke-PSModuleTest -ModuleFolderPath $moduleFolder.FullName
+        try {
+            $failedTests += Invoke-PSModuleTest -ModuleFolderPath $moduleFolder.FullName
+        } catch {
+            Write-Error "[$($moduleFolder.Name)] - $($_.Exception.Message)"
+        }
     }
+    $failedTests
 }

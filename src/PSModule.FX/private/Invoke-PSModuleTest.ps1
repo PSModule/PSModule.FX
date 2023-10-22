@@ -44,7 +44,7 @@
 
     if ($failedTests -gt 0) {
         Write-Error "[$moduleName] - [$failedTests] tests failed"
-        exit $failedTests
+        $failedTests
     } else {
         Write-Verbose "[$moduleName] - All tests passed"
     }
