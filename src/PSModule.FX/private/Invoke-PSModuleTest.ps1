@@ -34,7 +34,7 @@
     $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName
     Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
     if (Test-Path -Path $testFolderPath) {
-        $failedTests += nvoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
+        $failedTests += Invoke-PSCustomTests -ModuleFolder $moduleFolder -TestFolderPath $testFolderPath -Verbose:$false
     } else {
         Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
     }
