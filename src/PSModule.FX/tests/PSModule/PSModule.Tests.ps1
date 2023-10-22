@@ -31,5 +31,24 @@ Context 'Module design tests' {
         }
 
         # It 'Script file should only contain max one function or filter' {}
+
+        # It 'has tests for the section of functions' {} # Look for the folder name in tests called the same as section/folder name of functions
+
     }
+
+    Describe 'Function/filder design' {
+        # It 'has synopsis for all functions' {}
+        # It 'has description for all functions' {}
+        # It 'has examples for all functions' {}
+        # It 'has output documentation for all functions' {}
+        # It 'has [CmdletBinding()] attribute' {}
+        # It 'has [OutputType()] attribute' {}
+    }
+
+    Describe 'Parameter design' {
+        # It 'has parameter description for all functions' {}
+        # It 'has parameter validation for all functions' {}
+        # It 'parameters have [Parameters()] attribute' {}
+    }
+
 }
