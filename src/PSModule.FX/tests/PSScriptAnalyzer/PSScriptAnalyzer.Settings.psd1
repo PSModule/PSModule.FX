@@ -41,12 +41,12 @@
             CheckInnerBrace                         = $true
             CheckOpenBrace                          = $true
             CheckOpenParen                          = $true
-            CheckOperator                           = $false # Collides with PSAlignAssignmentStatement.CheckHashtable
+            CheckOperator                           = $true
             CheckPipe                               = $true
             CheckPipeForRedundantWhitespace         = $true
             CheckSeparator                          = $true
             CheckParameter                          = $true
-            IgnoreAssignmentOperatorInsideHashTable = $false
+            IgnoreAssignmentOperatorInsideHashTable = $true
         }
     }
 }
