@@ -16,9 +16,10 @@ Context 'Module design tests' {
                 if ($fileContent -match '^(?:function|filter)\s+([a-zA-Z][a-zA-Z0-9-]*)') {
                     $functionName = $matches[1]
                     $fileName = $_.BaseName
+                    $relativePath = $_.FullName.Replace($Path, '').Trim('\').Trim('/')
                     $scriptFiles += @{
                         fileName     = $fileName
-                        filePath     = $_.FullName.Replace($Path, '').Trim('\').Trim('/')
+                        filePath     = $relativePath
                         functionName = $functionName
                     }
                 }
