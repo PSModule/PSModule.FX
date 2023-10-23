@@ -6,11 +6,15 @@ function Test-PSModule {
         Test a module.
 
         .DESCRIPTION
-        Test a module using Pester and PSScriptAnalyzer.
-        Runs both custom tests defined in a module's tests folder and the default tests.
+        Test a module using PSModule tests based on Pester and PSScriptAnalyzer.
+        Can also run custom tests defined in a module's tests folder.
 
         .EXAMPLE
         Test-PSModule -Name 'PSModule.FX' -Path 'outputs'
+
+        Searches the 'outputs' folder for a module named 'PSModule.FX' and runs tests on it.
+
+        .EXAMPLE
     #>
     [OutputType([int])]
     [CmdletBinding(SupportsShouldProcess)]
@@ -21,7 +25,11 @@ function Test-PSModule {
 
         # Path to the folder where the built modules are outputted.
         [Parameter()]
-        [string] $Path
+        [string] $Path,
+
+        # Path to the folder where the custom tests are located.
+        [Parameter()]
+        [string] $CustomTestsPath
     )
 
     Write-Output '::group::Starting...'
@@ -36,7 +44,7 @@ function Test-PSModule {
     $failedTests = 0
     foreach ($moduleFolder in $moduleFolders) {
         try {
-            $failedTests += Invoke-PSModuleTest -ModuleFolderPath $moduleFolder.FullName
+            $failedTests += Invoke-PSModuleTest -ModuleFolderPath $moduleFolder.FullName -CustomTestsPath $CustomTestsPath
         } catch {
             throw "$($_.Exception.Message)"
         }

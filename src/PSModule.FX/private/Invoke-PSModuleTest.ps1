@@ -16,7 +16,11 @@
     param(
         # Path to the folder where the built modules are outputted.
         [Parameter(Mandatory)]
-        [string] $ModuleFolderPath
+        [string] $ModuleFolderPath,
+
+        # Path to the folder where the custom tests are located.
+        [Parameter()]
+        [string] $CustomTestsPath
     )
     $containers = @()
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
@@ -33,7 +37,7 @@
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
-    Write-Host "::endgroup::"
+    Write-Host '::endgroup::'
 
     Write-Host "::group::[$moduleName] - PSModule"
     $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
@@ -46,23 +50,27 @@
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
     $containers += New-PesterContainer @containerParams
-    Write-Host "::endgroup::"
+    Write-Host '::endgroup::'
 
     Write-Host "::group::[$moduleName] - Module specific tests"
-    $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath 'tests' $moduleName
-    Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
-    if (Test-Path -Path $testFolderPath) {
-        $containerParams = @{
-            Path = $testFolderPath
-            Data = @{
-                Path = $ModuleFolderPath
+    if ($CustomTestsPath) {
+        $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath $CustomTestsPath $moduleName
+        Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
+        if (Test-Path -Path $testFolderPath) {
+            $containerParams = @{
+                Path = $testFolderPath
+                Data = @{
+                    Path = $ModuleFolderPath
+                }
             }
+            Write-Verbose 'ContainerParams:'
+            Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
+            $containers += New-PesterContainer @containerParams
+        } else {
+            Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
         }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
-        $containers += New-PesterContainer @containerParams
     } else {
-        Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
+        Write-Warning "[$moduleName] - No custom tests path specified"
     }
     Write-Host '::endgroup::'
 
@@ -98,7 +106,7 @@
     Write-Verbose 'PesterParams:'
     Write-Verbose "$($pesterParams | ConvertTo-Json)"
     Write-Host '::endgroup::'
-    
+
     Invoke-Pester @pesterParams
     $failedTests = $LASTEXITCODE
 
