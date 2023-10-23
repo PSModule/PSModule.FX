@@ -37,7 +37,7 @@ Context 'Module design tests' {
 
     }
 
-    Describe 'Function/filder design' {
+    Describe 'Function/filter design' {
         # It 'comment based doc block start is indented with 4 spaces' {}
         # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
