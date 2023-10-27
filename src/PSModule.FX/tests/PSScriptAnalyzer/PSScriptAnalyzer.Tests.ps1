@@ -28,7 +28,7 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
             " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
         if ($issues.Count -gt 1) {
-            $issues[0] = "[$($issues.Count)] issues for rule [$RuleName]:"
+            $issues[0] = "[$($issues.Count - 1)] issues for rule [$RuleName]:"
         }
         $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
     }
