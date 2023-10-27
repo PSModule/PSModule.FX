@@ -27,7 +27,9 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
             $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
             " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
         }
-        $issues[0] = "[$($issues.Count)] issues for this rule:"
+        if ($issues.Count -gt 1) {
+            $issues[0] = "[$($issues.Count)] issues for rule [$RuleName]:"
+        }
         $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
     }
 }
