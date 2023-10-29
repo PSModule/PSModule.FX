@@ -185,11 +185,10 @@
     $manifest.RequiredModules | ForEach-Object { Write-Verbose "[$moduleName] - [RequiredModulesUnique] - [$_]" }
 
     Write-Verbose "[$moduleName] - [PowerShellVersion]"
-    $capturedVersions | ForEach-Object { Write-Verbose "[$moduleName] - [PowerShellVersion] - [$_]" }
     $capturedVersions = $capturedVersions | Sort-Object -Unique -Descending
-    Write-Verbose "[$moduleName] - [PowerShellVersion] - Descending, Unique"
     $capturedVersions | ForEach-Object { Write-Verbose "[$moduleName] - [PowerShellVersion] - [$_]" }
     $manifest.PowerShellVersion = $capturedVersions.count -eq 0 ? [version]'7.0' : [version]($capturedVersions | Select-Object -First 1)
+    Write-Verbose "[$moduleName] - [PowerShellVersion] - Selecting version"
     Write-Verbose "[$moduleName] - [PowerShellVersion] - [$($manifest.PowerShellVersion)]"
 
     Write-Verbose "[$moduleName] - [CompatiblePSEditions]"
