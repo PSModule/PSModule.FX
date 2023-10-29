@@ -93,6 +93,11 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
     Write-Output '::endgroup::'
 
+    Write-Verbose 'Invoke-Formatter on manifest file'
+    $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
+    Invoke-Formatter -ScriptDefinition $AllContent |
+        Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
+
     Write-Output "::group::[$moduleName] - Build root module - Result"
     Show-FileContent -Path $rootModuleFile
     Write-Output '::endgroup::'
