@@ -299,18 +299,20 @@
     $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
+    Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Manifest file before formatting"
+    Write-Output "::group::[$moduleName] - Build manifest file - Before format"
     Show-FileContent -Path $outputManifestPath
     Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Invoke-Formatter on manifest file"
+    Write-Output "::group::[$moduleName] - Build manifest file - Format"
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
     $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
     Invoke-Formatter -ScriptDefinition $manifestContent -Settings $settings |
         Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
+    Write-Output '::endgroup::'
 
-    Write-Verbose "[$moduleName] - Removing trailing whitespace from manifest file"
+    Write-Output "::group::[$moduleName] - Build manifest file - Removing trailing whitespace"
     $manifestContent = Get-Content -Path $outputManifestPath
     $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
