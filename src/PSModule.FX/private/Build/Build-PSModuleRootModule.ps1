@@ -19,12 +19,17 @@
     $rootModuleFile = New-Item -Path $moduleOutputfolder -Name "$moduleName.psm1" -Force
 
     # Add content to the root module file in the following order:
+    # 0. Module attributes
     # 1. Load data files from Data folder
     # 2. Init
     # 3. Private
     # 4. Public
     # 5  *.ps1 on module root
     # 6. Export-ModuleMember
+
+    $moduleAttributes = Join-Path -Path $SourceFolderPath -ChildPath 'attributes.txt'
+    $moduleAttributesContent = Get-Content -Path $moduleAttributes -Raw
+    Add-Content -Path $rootModuleFile.FullName -Force -Value $moduleAttributesContent
 
     Add-Content -Path $rootModuleFile.FullName -Force -Value @'
 [Cmdletbinding()]
