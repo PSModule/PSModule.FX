@@ -1,19 +1,20 @@
 ﻿function Resolve-PSModuleDependencies {
     <#
-    .SYNOPSIS
-    Resolve dependencies for a module based on the manifest file.
+        .SYNOPSIS
+        Resolve dependencies for a module based on the manifest file.
 
-    .DESCRIPTION
-    Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
+        .DESCRIPTION
+        Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
 
-    .EXAMPLE
-    Resolve-PSModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
+        .EXAMPLE
+        Resolve-PSModuleDependencies -Path 'C:\MyModule\MyModule.psd1'
 
-    Installs all modules defined in the manifest file, following PSModuleInfo structure.
+        Installs all modules defined in the manifest file, following PSModuleInfo structure.
 
-    .NOTES
-    Should later be adapted to support both pre-reqs, and dependencies.
-    Should later be adapted to take 4 parameters sets: specific version ("requiredVersion" | "GUID"), latest version ModuleVersion, and latest version within a range MinimumVersion - MaximumVersion.
+        .NOTES
+        Should later be adapted to support both pre-reqs, and dependencies.
+        Should later be adapted to take 4 parameters sets: specific version ("requiredVersion" | "GUID"), latest version ModuleVersion,
+        and latest version within a range MinimumVersion - MaximumVersion.
     #>
     [CmdletBinding()]
     param(
