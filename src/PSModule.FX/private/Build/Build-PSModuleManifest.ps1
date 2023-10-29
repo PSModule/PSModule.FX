@@ -309,6 +309,11 @@
     $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
     Invoke-Formatter -ScriptDefinition $manifestContent -Settings $settings |
         Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
+
+    Write-Verbose "[$moduleName] - Removing trailing whitespace from manifest file"
+    $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
+    $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
     Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
