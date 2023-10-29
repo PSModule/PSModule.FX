@@ -26,7 +26,7 @@
     # 5  *.ps1 on module root
     # 6. Export-ModuleMember
 
-    Add-Content -Path $rootModuleFile.FullName -Value @'
+    Add-Content -Path $rootModuleFile.FullName -Force -Value @'
 [Cmdletbinding()]
 param()
 
@@ -63,14 +63,14 @@ Write-Verbose "[$scriptName] - [data] - Done"
     $files = $SourceFolderPath | Get-ChildItem -File -Force -Filter '*.ps1'
     foreach ($file in $files) {
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
-        Add-Content -Path $rootModuleFile.FullName -Value @"
+        Add-Content -Path $rootModuleFile.FullName -Force -Value @"
 #region - From $relativePath
 Write-Verbose "[`$scriptName] - [$relativePath] - Importing"
 
 "@
-        Get-Content -Path $file.FullName | Add-Content -Path $rootModuleFile.FullName
+        Get-Content -Path $file.FullName | Add-Content -Path $rootModuleFile.FullName -Force
 
-        Add-Content -Path $rootModuleFile.FullName -Value @"
+        Add-Content -Path $rootModuleFile.FullName -Force -Value @"
 Write-Verbose "[`$scriptName] - [$relativePath] - Done"
 #endregion - From $relativePath
 
@@ -90,7 +90,7 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     $aliasesToExport = Get-PSModuleAliasesToExport -SourceFolderPath $SourceFolderPath
     $aliasesToExport = $($aliasesToExport -join "','")
 
-    Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
+    Add-Content -Path $rootModuleFile -Force -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
     Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build root module - Before format"

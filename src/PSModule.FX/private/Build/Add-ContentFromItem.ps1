@@ -6,7 +6,7 @@
     )
     $relativeFolderPath = $Path.Replace($RootPath, '').TrimStart($pathSeparator)
 
-    Add-Content -Path $RootModuleFilePath -Value @"
+    Add-Content -Path $RootModuleFilePath -Force -Value @"
 #region - From $relativeFolderPath
 Write-Verbose "[`$scriptName] - [$relativeFolderPath] - Processing folder"
 
@@ -20,19 +20,19 @@ Write-Verbose "[`$scriptName] - [$relativeFolderPath] - Processing folder"
     $files = $Path | Get-ChildItem -File -Force -Filter '*.ps1' | Sort-Object -Property FullName
     foreach ($file in $files) {
         $relativeFilePath = $file.FullName.Replace($RootPath, '').TrimStart($pathSeparator)
-        Add-Content -Path $RootModuleFilePath -Value @"
+        Add-Content -Path $RootModuleFilePath -Force -Value @"
 #region - From $relativeFilePath
 Write-Verbose "[`$scriptName] - [$relativeFilePath] - Importing"
 
 "@
-        Get-Content -Path $file.FullName | Add-Content -Path $RootModuleFilePath
+        Get-Content -Path $file.FullName | Add-Content -Path $RootModuleFilePath -Force
         Add-Content -Path $RootModuleFilePath -Value @"
 
 Write-Verbose "[`$scriptName] - [$relativeFilePath] - Done"
 #endregion - From $relativeFilePath
 "@
     }
-    Add-Content -Path $RootModuleFilePath -Value @"
+    Add-Content -Path $RootModuleFilePath -Force -Value @"
 
 Write-Verbose "[`$scriptName] - [$relativeFolderPath] - Done"
 #endregion - From $relativeFolderPath
