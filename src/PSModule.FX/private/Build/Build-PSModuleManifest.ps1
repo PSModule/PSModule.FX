@@ -161,13 +161,13 @@
                 }
                 # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
                 '\s*#Requires -Version (.+)$' {
-                    Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [##Requires -Version] - [$($matches[1])]"
+                    Write-Verbose " - [#Requires -Version] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedVersions += $matches[1]
                 }
                 #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
                 '\s*#Requires -PSEdition (.+)$' {
-                    Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [#Requires -PSEdition] - [$($matches[1])]"
+                    Write-Verbose " - [#Requires -PSEdition] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedPSEdition += $matches[1]
                 }
