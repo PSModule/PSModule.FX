@@ -45,7 +45,7 @@
     Build-PSModuleRootModule -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
     Build-PSModuleManifest -SourceFolderPath $moduleSourceFolder -OutputFolderPath $modulesOutputFolder
 
-    Import-PSModule -SourceFolderPath $moduleSourceFolder -ModuleName $moduleName
+    Import-PSModule -SourceFolderPath $modulesOutputFolder -ModuleName $moduleName
 
     $moduleOutputFolder = Join-Path $modulesOutputFolder $moduleName
     $docOutputFolder = Join-Path $docsOutputFolder $moduleName

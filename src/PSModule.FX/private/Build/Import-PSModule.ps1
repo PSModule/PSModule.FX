@@ -22,10 +22,11 @@
         [string] $ModuleName
     )
 
+    Write-Output "::group::[$ModuleName] - Importing module"
+
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo -Verbose:$false
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
 
-    Write-Output "::group::[$ModuleName] - Importing module"
     Import-Module $ModuleName
 
     Write-Verbose "[$ModuleName] - List loaded modules"
