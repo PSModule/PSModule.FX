@@ -97,12 +97,12 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     Show-FileContent -Path $rootModuleFile
     Write-Output '::endgroup::'
 
-    # Write-Output "::group::[$moduleName] - Build root module - Format"
-    # $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
-    # $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
-    # Invoke-Formatter -ScriptDefinition $AllContent -Settings $settings |
-    #     Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
-    # Write-Output '::endgroup::'
+    Write-Output "::group::[$moduleName] - Build root module - Format"
+    $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
+    $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
+    Invoke-Formatter -ScriptDefinition $AllContent -Settings $settings |
+        Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
+    Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build root module - Result"
     Show-FileContent -Path $rootModuleFile
