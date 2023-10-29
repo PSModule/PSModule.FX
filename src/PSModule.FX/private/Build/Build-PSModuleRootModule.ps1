@@ -93,11 +93,16 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     Add-Content -Path $rootModuleFile -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
     Write-Output '::endgroup::'
 
-    Write-Verbose 'Invoke-Formatter on manifest file'
+    Write-Output "::group::[$moduleName] - Root module before formating"
+    Show-FileContent -Path $rootModuleFile
+    Write-Output '::endgroup::'
+
+    Write-Output "::group::[$moduleName] - Invoke-Formatter on root module"
     $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
     $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
     Invoke-Formatter -ScriptDefinition $AllContent -Settings $settings |
         Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
+    Write-Output '::endgroup::'
 
     Write-Output "::group::[$moduleName] - Build root module - Result"
     Show-FileContent -Path $rootModuleFile
