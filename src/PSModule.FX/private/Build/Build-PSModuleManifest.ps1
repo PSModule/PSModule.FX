@@ -140,7 +140,7 @@
 
             switch -Regex ($fileContent) {
                 # RequiredModules -> REQUIRES -Modules <Module-Name> | <Hashtable>, @() if not provided
-                '^#Requires -Modules (.+)$' {
+                '\s*#Requires -Modules (.+)$' {
                     # Add captured module name to array
                     $capturedMatches = $matches[1].Split(',').trim()
                     $capturedMatches | ForEach-Object {
@@ -160,13 +160,13 @@
                     }
                 }
                 # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
-                '^#Requires -Version (.+)$' {
+                '\s*#Requires -Version (.+)$' {
                     Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [##Requires -Version] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedVersions += $matches[1]
                 }
                 #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
-                '^#Requires -PSEdition (.+)$' {
+                '\s*#Requires -PSEdition (.+)$' {
                     Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [#Requires -PSEdition] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedPSEdition += $matches[1]
