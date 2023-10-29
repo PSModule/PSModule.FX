@@ -16,3 +16,4 @@ jobs:
     with:
       TestModuleErrorAction: 'Continue'
       TestSrcErrorAction: 'Continue'
+      Version: '0.0.157'
