@@ -326,7 +326,7 @@
 
     Write-Output "::group::[$moduleName] - Build manifest file - Remmove comments"
     $manifestContent = Get-Content -Path $outputManifestPath
-    $manifestContent = $manifestContent | Where-Object { -not $_.StartsWith('#') }
+    $manifestContent = $manifestContent | Where-Object { $_ -notmatch '^\s*#' }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
     Write-Output '::endgroup::'
 
