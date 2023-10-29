@@ -318,6 +318,15 @@
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
     Write-Output '::endgroup::'
 
+    Write-Output "::group::[$moduleName] - Build manifest file - Add PSAvoidLongLines"
+    $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = @(
+        "[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidLongLines', '', Justification = 'Generated file with long comments.')]"
+    )
+    $manifestContent += $manifestContent
+    $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
+    Write-Output '::endgroup::'
+
     Write-Output "::group::[$moduleName] - Build manifest file - Result"
     Show-FileContent -Path $outputManifestPath
     Write-Output '::endgroup::'
