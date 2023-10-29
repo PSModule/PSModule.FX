@@ -318,11 +318,15 @@
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
     Write-Output '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Add PSAvoidLongLines"
-    $manifestContent = @(
-        "[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidLongLines', '', Justification = 'Generated file with long comments.')]"
-    )
-    $manifestContent += Get-Content -Path $outputManifestPath
+    Write-Output "::group::[$moduleName] - Build manifest file - Remove blank lines"
+    $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = $manifestContent | Where-Object { -not [string]::IsNullOrEmpty($_) }
+    $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
+    Write-Output '::endgroup::'
+
+    Write-Output "::group::[$moduleName] - Build manifest file - Remmove comments"
+    $manifestContent = Get-Content -Path $outputManifestPath
+    $manifestContent = $manifestContent | Where-Object { -not $_.StartsWith('#') }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
     Write-Output '::endgroup::'
 
