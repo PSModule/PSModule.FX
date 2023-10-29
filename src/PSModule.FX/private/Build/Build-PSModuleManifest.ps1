@@ -130,10 +130,10 @@
     $capturedPSEdition = @()
 
     $files = $SourceFolderPath | Get-ChildItem -Recurse -File -ErrorAction SilentlyContinue
-    Write-Verbose "[$moduleName] - Processing [$($files.Count)] files"
+    Write-Verbose "[$moduleName] - [Gather] - Processing [$($files.Count)] files"
     foreach ($file in $files) {
         $relativePath = $file.FullName.Replace($SourceFolderPath, '').TrimStart($pathSeparator)
-        Write-Verbose "[$moduleName] - [$relativePath]"
+        Write-Verbose "[$moduleName] - [Gather] - [$relativePath]"
 
         if ($file.extension -in '.psm1', '.ps1') {
             $fileContent = Get-Content -Path $file
@@ -144,30 +144,30 @@
                     # Add captured module name to array
                     $capturedMatches = $matches[1].Split(',').trim()
                     $capturedMatches | ForEach-Object {
-                        Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_]"
+                        Write-Verbose " - [#Requires -Modules] - [$_]"
                         $hashtable = '\@\s*\{[^\}]*\}'
                         if ($_ -match $hashtable) {
                             $modules = ConvertTo-Hashtable -InputString $_
-                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_] - Hashtable"
+                            Write-Verbose " - [#Requires -Modules] - [$_] - Hashtable"
                             $modules.Keys | ForEach-Object {
                                 Write-Verbose "$($modules[$_])]"
                             }
                             $capturedModules += $modules
                         } else {
-                            Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Modules] - [$_] - String"
+                            Write-Verbose " - [#Requires -Modules] - [$_] - String"
                             $capturedModules += $_
                         }
                     }
                 }
                 # PowerShellVersion -> REQUIRES -Version <N>[.<n>], $null if not provided
                 '^#Requires -Version (.+)$' {
-                    Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -Version] - [$($matches[1])]"
+                    Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [##Requires -Version] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedVersions += $matches[1]
                 }
                 #CompatiblePSEditions -> REQUIRES -PSEdition <PSEdition-Name>, $null if not provided
                 '^#Requires -PSEdition (.+)$' {
-                    Write-Verbose "[$moduleName] - [$relativePath] - [REQUIRED -PSEdition] - [$($matches[1])]"
+                    Write-Verbose "[$moduleName] - [Gather] - [$relativePath] - [#Requires -PSEdition] - [$($matches[1])]"
                     # Add captured module name to array
                     $capturedPSEdition += $matches[1]
                 }
