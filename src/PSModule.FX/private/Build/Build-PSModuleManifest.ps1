@@ -303,7 +303,8 @@
     Write-Verbose 'Invoke-Formatter on manifest file'
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
 
-    Invoke-Formatter -ScriptDefinition $manifestContent -Verbose |
+    $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
+    Invoke-Formatter -ScriptDefinition $manifestContent -Settings $settings |
         Out-File -FilePath $outputManifestPath -Encoding utf8 -Force
 
     Write-Output "::group::[$moduleName] - Build manifest file - Result"

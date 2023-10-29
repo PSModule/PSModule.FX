@@ -95,7 +95,8 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
 
     Write-Verbose 'Invoke-Formatter on manifest file'
     $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
-    Invoke-Formatter -ScriptDefinition $AllContent |
+    $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
+    Invoke-Formatter -ScriptDefinition $AllContent -Settings $settings |
         Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
 
     Write-Output "::group::[$moduleName] - Build root module - Result"
