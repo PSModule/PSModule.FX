@@ -48,6 +48,7 @@ Context 'Module design tests' {
         # It 'has [CmdletBinding()] attribute' {}
         # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {} # I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
+        # It 'has verb 'New','Set','Disable','Enable' etc. and uses "ShoudProcess" in the [CmdletBinding()] attribute' {}
     }
 
     Describe 'Parameter design' {
