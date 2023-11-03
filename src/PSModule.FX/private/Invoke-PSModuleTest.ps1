@@ -26,11 +26,6 @@
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
 
-    Write-Host '::group::Importing module..'
-    Add-PSModulePath -Path $ModuleFolderPath
-    Import-Module -Name $moduleName -Force -Verbose:$false
-    Write-Host '::endgroup::'
-
     Write-Host "::group::[$moduleName] - PSScriptAnalyzer"
     $containerParams = @{
         Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
@@ -57,8 +52,13 @@
     $containers += New-PesterContainer @containerParams
     Write-Host '::endgroup::'
 
-    Write-Host "::group::[$moduleName] - Module specific tests"
     if ($CustomTestsPath) {
+        Write-Host '::group::Importing module..'
+        Add-PSModulePath -Path $ModuleFolderPath
+        Import-Module -Name $moduleName -Force -Verbose:$false
+        Write-Host '::endgroup::'
+
+        Write-Host "::group::[$moduleName] - Module specific tests"
         Write-Verbose "[$moduleName] - [$CustomTestsPath] - Checking for tests"
         if (Test-Path -Path $CustomTestsPath) {
             $containerParams = @{
