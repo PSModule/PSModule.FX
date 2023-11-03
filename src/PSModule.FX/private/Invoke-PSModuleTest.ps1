@@ -54,11 +54,10 @@
 
     Write-Host "::group::[$moduleName] - Module specific tests"
     if ($CustomTestsPath) {
-        $testFolderPath = Join-Path -Path (Split-Path -Path (Split-Path -Path $ModuleFolderPath -Parent) -Parent) -ChildPath $CustomTestsPath $moduleName
-        Write-Verbose "[$moduleName] - [$testFolderPath] - Checking for tests"
-        if (Test-Path -Path $testFolderPath) {
+        Write-Verbose "[$moduleName] - [$CustomTestsPath] - Checking for tests"
+        if (Test-Path -Path $CustomTestsPath) {
             $containerParams = @{
-                Path = $testFolderPath
+                Path = $CustomTestsPath
                 Data = @{
                     Path = $ModuleFolderPath
                 }
@@ -67,7 +66,7 @@
             Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
             $containers += New-PesterContainer @containerParams
         } else {
-            Write-Warning "[$moduleName] - [$testFolderPath] - No tests found"
+            Write-Warning "[$moduleName] - [$CustomTestsPath] - No tests found"
         }
     } else {
         Write-Warning "[$moduleName] - No custom tests path specified"
