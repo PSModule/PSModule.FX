@@ -24,8 +24,11 @@
     )
     $containers = @()
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
-
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
+
+    Add-PSModulePath -Path $ModuleFolderPath
+    Import-Module -Name $moduleName -Force -Verbose:$false
+
     Write-Host "::group::[$moduleName] - PSScriptAnalyzer"
     $containerParams = @{
         Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
