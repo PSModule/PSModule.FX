@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build manifest file"
+    Write-Host "::group::[$moduleName] - Build manifest file"
     Write-Verbose "[$moduleName] - Finding manifest file"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo
@@ -299,40 +299,40 @@
     $outputManifestPath = (Join-Path -Path $OutputFolderPath $moduleName $manifestFileName)
     Write-Verbose "OutputManifestPath - [$outputManifestPath]"
     New-ModuleManifest -Path $outputManifestPath @manifest
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Before format"
+    Write-Host "::group::[$moduleName] - Build manifest file - Before format"
     Show-FileContent -Path $outputManifestPath
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Format"
+    Write-Host "::group::[$moduleName] - Build manifest file - Format"
     $manifestContent = Get-Content -Path $outputManifestPath -Raw
     $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
     Invoke-Formatter -ScriptDefinition $manifestContent -Settings $settings |
         Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Removing trailing whitespace"
+    Write-Host "::group::[$moduleName] - Build manifest file - Removing trailing whitespace"
     $manifestContent = Get-Content -Path $outputManifestPath
     $manifestContent = $manifestContent | ForEach-Object { $_.TrimEnd() }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Remove blank lines"
+    Write-Host "::group::[$moduleName] - Build manifest file - Remove blank lines"
     $manifestContent = Get-Content -Path $outputManifestPath
     $manifestContent = $manifestContent | Where-Object { -not [string]::IsNullOrEmpty($_) }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Remove comments"
+    Write-Host "::group::[$moduleName] - Build manifest file - Remove comments"
     $manifestContent = Get-Content -Path $outputManifestPath
     $manifestContent = $manifestContent | Where-Object { $_ -notmatch '^\s*#' }
     $manifestContent | Out-File -FilePath $outputManifestPath -Encoding utf8BOM -Force
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
     #TODO: Add way to normalize string arrays
 
-    Write-Output "::group::[$moduleName] - Build manifest file - Result"
+    Write-Host "::group::[$moduleName] - Build manifest file - Result"
     Show-FileContent -Path $outputManifestPath
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 }

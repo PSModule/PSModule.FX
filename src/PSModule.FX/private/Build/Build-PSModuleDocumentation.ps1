@@ -12,13 +12,13 @@
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
 
-    Write-Output "::group::[$moduleName] - Build documentation"
+    Write-Host "::group::[$moduleName] - Build documentation"
     New-MarkdownHelp -Module $moduleName -OutputFolder $OutputFolderPath -Force -Verbose
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build documentation - Result"
+    Write-Host "::group::[$moduleName] - Build documentation - Result"
     Get-ChildItem -Path $OutputFolderPath -Recurse -Force -Include '*.md' | ForEach-Object {
-        Write-Output "::debug::[$moduleName] - [$_] - [$(Get-FileHash -Path $_.FullName -Algorithm SHA256)]"
+        Write-Host "::debug::[$moduleName] - [$_] - [$(Get-FileHash -Path $_.FullName -Algorithm SHA256)]"
     }
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 }

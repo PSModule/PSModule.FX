@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build root module"
+    Write-Host "::group::[$moduleName] - Build root module"
 
     # RE-create the moduleName.psm1 file
     # concat all the files, and add Export-ModuleMembers at the end with modules.
@@ -96,20 +96,20 @@ Write-Verbose "[`$scriptName] - [$relativePath] - Done"
     $aliasesToExport = $($aliasesToExport -join "','")
 
     Add-Content -Path $rootModuleFile -Force -Value "Export-ModuleMember -Function '$functionsToExport' -Cmdlet '$cmdletsToExport' -Variable '$variablesToExport' -Alias '$aliasesToExport'"
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build root module - Before format"
+    Write-Host "::group::[$moduleName] - Build root module - Before format"
     Show-FileContent -Path $rootModuleFile
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build root module - Format"
+    Write-Host "::group::[$moduleName] - Build root module - Format"
     $AllContent = Get-Content -Path $rootModuleFile.FullName -Raw
     $settings = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
     Invoke-Formatter -ScriptDefinition $AllContent -Settings $settings |
         Out-File -FilePath $rootModuleFile.FullName -Encoding utf8BOM -Force
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build root module - Result"
+    Write-Host "::group::[$moduleName] - Build root module - Result"
     Show-FileContent -Path $rootModuleFile
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 }

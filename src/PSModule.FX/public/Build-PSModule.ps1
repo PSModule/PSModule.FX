@@ -39,7 +39,7 @@ function Build-PSModule {
         [string] $OutputPath = 'outputs'
     )
 
-    Write-Output '::group::Starting...'
+    Write-Host '::group::Starting...'
 
     $modulesOutputFolderPath = Join-Path -Path $OutputPath 'modules'
     Write-Verbose "Creating module output folder [$modulesOutputFolderPath]"

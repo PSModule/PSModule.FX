@@ -11,7 +11,7 @@
     )
 
     $moduleName = Split-Path -Path $SourceFolderPath -Leaf
-    Write-Output "::group::[$moduleName] - Build base"
+    Write-Host "::group::[$moduleName] - Build base"
 
     $deletePaths = @(
         'init',
@@ -24,9 +24,9 @@
     Copy-Item -Path "$SourceFolderPath" -Destination $OutputFolderPath -Recurse -Force -Verbose
     Write-Verbose "Deleting files from [$OutputFolderPath] that are not needed"
     Get-ChildItem -Path $OutputFolderPath -Recurse -Force | Where-Object { $_.Name -in $deletePaths } | Remove-Item -Force -Recurse -Verbose
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
-    Write-Output "::group::[$moduleName] - Build base - Result"
+    Write-Host "::group::[$moduleName] - Build base - Result"
     (Get-ChildItem -Path $OutputFolderPath -Recurse -Force).FullName | Sort-Object
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 }

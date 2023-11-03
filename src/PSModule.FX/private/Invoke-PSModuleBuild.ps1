@@ -36,7 +36,7 @@
 
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
 
-    Write-Output "::group::[$moduleName]"
+    Write-Host "::group::[$moduleName]"
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
 
     $moduleSourceFolder = Get-Item -Path $ModuleFolderPath

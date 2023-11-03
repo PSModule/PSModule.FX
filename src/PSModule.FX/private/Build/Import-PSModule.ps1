@@ -22,7 +22,7 @@
         [string] $ModuleName
     )
 
-    Write-Output "::group::[$ModuleName] - Importing module"
+    Write-Host "::group::[$ModuleName] - Importing module"
 
     $manifestFile = Get-PSModuleManifest -SourceFolderPath $SourceFolderPath -As FileInfo -Verbose:$false
     Resolve-PSModuleDependencies -ManifestFilePath $manifestFile
@@ -36,5 +36,5 @@
     if ($ModuleName -notin $availableModules.Name) {
         throw "[$ModuleName] - Module not found"
     }
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 }

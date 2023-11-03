@@ -32,14 +32,14 @@ function Test-PSModule {
         [string] $CustomTestsPath
     )
 
-    Write-Output '::group::Starting...'
+    Write-Host '::group::Starting...'
 
     $moduleFolders = Get-PSModuleFolders -Path $Path | Where-Object { $_.Name -like $Name }
     Write-Verbose "Found $($moduleFolders.Count) module(s)"
     $moduleFolders | ForEach-Object {
         Write-Verbose "[$($_.Name)]"
     }
-    Write-Output '::endgroup::'
+    Write-Host '::endgroup::'
 
     $failedTests = 0
     foreach ($moduleFolder in $moduleFolders) {

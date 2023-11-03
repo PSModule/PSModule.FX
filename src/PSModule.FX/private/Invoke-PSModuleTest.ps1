@@ -26,8 +26,10 @@
     Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
     $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
 
+    Write-Host '::group::Importing module..'
     Add-PSModulePath -Path $ModuleFolderPath
     Import-Module -Name $moduleName -Force -Verbose:$false
+    Write-Host '::endgroup::'
 
     Write-Host "::group::[$moduleName] - PSScriptAnalyzer"
     $containerParams = @{
