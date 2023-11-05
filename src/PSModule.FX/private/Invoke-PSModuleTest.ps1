@@ -53,7 +53,7 @@
     Write-Host '::endgroup::'
 
     if ($CustomTestsPath) {
-        Write-Host '::group::[$moduleName] - Importing module'
+        Write-Host "::group::[$moduleName] - Importing module"
         Add-PSModulePath -Path (Split-Path -Path $ModuleFolderPath -Parent)
         Import-Module -Name $moduleName -Force
         Write-Host '::endgroup::'
